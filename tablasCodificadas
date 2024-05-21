@@ -1,3 +1,530 @@
+-------------------------------------------------------------------------------------------
+
+Unidad Ejecutivo (dic23)(outdated) =
+if (Grupo_Ejecutivo in ('(ACC) Oficiales A'; '(ACC) Oficiales B'; '(ACC) Oficiales C'; '(ACC) Oficiales Jefa'))
+    then ('(ACC) Oficiales')
+    
+else if (Grupo_Ejecutivo = ('(ACC) Nuevos Negocios')) 
+    then ('(ACC) Nuevos Negocios')
+    
+else if (Grupo_Ejecutivo in ('(ACC Privados Jefa)'; '(ACC) Privados A'; '(ACC) Privados C'; '(ACC) Privados D'; '(ACC) Privados E'; '(ACC) Privados F'; '(ACC) Privados G'; 
+    '(ACC) Privados I'; '(ACC) Privados J'; '(ACC) Privados K'; '(ACC) Privados VIP'))
+    then ('(ACC) Privados')
+    
+else if (Grupo_Ejecutivo in ('(ACC) Zafiro A';'(ACC) Zafiro B';'(ACC) Zafiro D';'(ACC) Zafiro E';'(ACC) Zafiro Jefe'))
+    then ('(ACC) Zafiro')
+
+else if (Grupo_Ejecutivo in ('(ACCI) Artigas'; '(ACCI) Río Negro';'(ACCI) Rivera';'(ACCI) Salto';'(ACCI) Tacuarembó'; '(ACCI) Paysandú'))
+    then ('(ACCI) Zona Norte')
+
+else if (Grupo_Ejecutivo in ('(ACCI) San José';'(ACCI) Soriano';'(ACCI) Canelones';'(ACCI) Colonia';'(ACCI) Flores';'(ACCI) Florida';'(ACCI) Durazno'))
+    then ('(ACCI) Zona Oeste')
+
+else if (Grupo_Ejecutivo in ('(ACCI) Treinta y Tres';'(ACCI) Rocha';'(ACCI) Maldonado';'(ACCI) Cerro Largo';'(ACCI) Lavalleja';'(ACCI) Oficiales Interior'))
+    then ('(ACCI) Zona Este')
+
+else if (Grupo_Ejecutivo = ('(ADV) Agentes de Venta')) 
+    then ('(ADV) Agentes de Venta')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Atención Pymes')) 
+    then ('(ACPY) Atención Pymes')
+    
+else if (Grupo_Ejecutivo = ('(ACC) DataCenter')) 
+    then ('(ACC) DataCenter')
+    
+else if (Grupo_Ejecutivo = ('(ACPC) Proyectos')) 
+    then ('(ACPC) Proyectos')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Ventas Pymes')) 
+    then ('(ACPY) Ventas Pymes')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Atención Pymes')) 
+    then ('(ACPY) Atención Pymes')
+    
+else if (Grupo_Ejecutivo = ('(MVD) Ventas Internacionales')) 
+    then ('(MVD) Ventas Internacionales')
+    
+else ('(sin unidad)')
+
+--------------------------------------------------------------------------------------------
+
+Unidad Ejecutivo (feb24) =
+if (Grupo_Ejecutivo in ('(ACC) Oficiales A'; '(ACC) Oficiales B'; '(ACC) Oficiales C'; '(ACC) Oficiales Jefa'))
+    then ('(ACC) Oficiales')
+    
+else if (Grupo_Ejecutivo = ('(ACC) Nuevos Negocios')) 
+    then ('(ACC) Nuevos Negocios')
+    
+else if (Grupo_Ejecutivo in ('(ACC Privados Jefa)'; '(ACC) Privados A'; '(ACC) Privados C'; '(ACC) Privados D'; '(ACC) Privados E'; '(ACC) Privados F'; '(ACC) Privados G'; 
+    '(ACC) Privados I'; '(ACC) Privados J'; '(ACC) Privados K'; '(ACC) Privados VIP'))
+    then ('(ACC) Privados')
+    
+else if (Grupo_Ejecutivo in ('(ACC) Zafiro A';'(ACC) Zafiro B';'(ACC) Zafiro C';'(ACC) Zafiro D';'(ACC) Zafiro E';'(ACC) Zafiro Jefe'))
+    then ('(ACC) Zafiro')
+
+else if (Grupo_Ejecutivo in ('(ACCI) Artigas'; '(ACCI) Río Negro';'(ACCI) Rivera';'(ACCI) Salto';'(ACCI) Tacuarembó'; '(ACCI) Paysandú'))
+    then ('(ACCI) Zona Norte')
+
+else if (Grupo_Ejecutivo in ('(ACCI) San José';'(ACCI) Soriano';'(ACCI) Canelones';'(ACCI) Colonia';'(ACCI) Flores';'(ACCI) Florida';'(ACCI) Durazno'))
+    then ('(ACCI) Zona Oeste')
+
+else if (Grupo_Ejecutivo in ('(ACCI) Treinta y Tres';'(ACCI) Rocha';'(ACCI) Maldonado';'(ACCI) Cerro Largo';'(ACCI) Lavalleja';'(ACCI) Oficiales Interior'))
+    then ('(ACCI) Zona Este')
+
+else if (Grupo_Ejecutivo = ('(ADV) Agentes de Venta')) 
+    then ('(ADV) Agentes de Venta')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Atención Pymes')) 
+    then ('(ACPY) Atención Pymes')
+    
+else if (Grupo_Ejecutivo = ('(ACC) DataCenter')) 
+    then ('(ACC) DataCenter')
+    
+else if (Grupo_Ejecutivo = ('(ACPC) Proyectos')) 
+    then ('(ACPC) Proyectos')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Ventas Pymes')) 
+    then ('(ACPY) Ventas Pymes')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Atención Pymes')) 
+    then ('(ACPY) Atención Pymes')
+    
+else if (Grupo_Ejecutivo = ('(MVD) Ventas Internacionales')) 
+    then ('(MVD) Ventas Internacionales')
+    
+else ('(sin unidad)')
+
+
+
+--------------------------------------------------------------------------------------------
+
+Grupo Ejecutivo (feb24)=
+if (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Alejandra Flores'; 'Cecilia Sorrondegui'; 'Fabian Nuñez'; 'Javier Camargo'; 'Marcelo Miguel Salvia'; 'Natalia Rabela'; 'Virginia Molina'; 'Ventas Corporativas'))
+    THEN ('(ACC) Nuevos Negocios')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Jefes Unidad Cuentas Privadas'))
+    THEN ('(ACC) Privados Jefa')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Lourdes Araujo'; 'Cecilia Lujan Morales'; 'Edurne Miralles'; 'Leticia Acuña'; 'Maria Virginia Carriquiry'))
+    THEN ('(ACC) Oficiales A')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Federico Eduardo Perez'; 'Javier Ignacio Izquierdo'; 'Marcelo Paiva'; 'Ruben Dondan' ; 'Norberto Ricardo Viana'))
+    THEN ('(ACC) Oficiales B')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alexis Jorge Sanz'; 'Yisela Yanet Da Silva' ; 'Claudia Carolina Garcia'; 'Fabian Chollet'; 'Natalia Puchkariov'; 'Oficiales C'; 'Nicolás Ferrer'))
+    THEN ('(ACC) Oficiales C')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Leticia Elizabeth Sanchez'))
+    THEN ('(ACC) Oficiales Jefa')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Cecilia Dogliotti'; 'Leonardo Delorrio'; 'Maria Jose Gonzalez'; 'Ramiro Fuster'))
+    THEN ('(ACC) Privados A')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Daniel Molares'; 'Gustavo Delgado'; 'Javier Forestero'; 'Pablo Vazquez'))
+    THEN ('(ACC) Privados C')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Ana Laura Da Silva'; 'Claudia Sanchez'; 'Tania Techera'; 'Veronica Ferrer'))
+    THEN ('(ACC) Privados D')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Maria de los Angeles Dorado'; 'Mariela Flores'; 'Noelia Larrosa'; 'Pablo Solari'))
+    THEN ('(ACC) Privados E')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alejandra Mera'; 'Lilian Ramenghi'; 'Mariela Garcia'; 'Viviana Rivoira'))
+    THEN ('(ACC) Privados F')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Cesar Sebastián Huelmo Pereyra'; 'Fernando Maidana'; 'Maria Eugenia Lecchini'; 'Maria Noel Martin'))
+    THEN ('(ACC) Privados G')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Claudia Moraes'; 'Florencia Gazzano'; 'Claudia Rodriguez Fernandez'))
+    THEN ('(ACC) Privados I')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Moreno'; 'Leticia Souto'; 'Lucila Beatriz Rodriguez'; 'Valeria Sosa Urga'))
+    THEN ('(ACC) Privados J')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Demedice'; 'Franco Lazzarini'; 'Jorge Vidal'; 'Patricia Echavarria'))
+    THEN ('(ACC) Privados K')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Marcela Bruffau'; 'Jhonatan Toraval'))
+    THEN ('(ACC) Privados VIP')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alejandra Maria Aranda Peña'; 'Andrea Veronica Cajiga Curbelo'; 'Marisa Lencina Martignoni'; 'Patricia Morales Odllakovich'))
+    THEN ('(ACC) Zafiro A')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ( 'Gabriel Brun Lafalche'; 'Paola Adelina Ivani Mondelli'; 'Sandra Izquierdo Gonzalez'; 'Tania Almeida'))
+    THEN ('(ACC) Zafiro B')
+
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carmen Esther Bargo Ojeda'; 'Gabriela De Los Santos Dominguez'; 'Victoria Sierig'))
+    THEN ('(ACC) Zafiro C')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Ortega Yamgochian'; 'Danilo Cesar Marega Rognoni'; 'Marcelo Savio'; 'Maximiliano Alegre Algazi'))
+    THEN ('(ACC) Zafiro D')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alicia Velazquez'; 'Gerard Mayayo'; 'Martin Robert Brioso Olivera'; 'Mauricio Suárez'))
+    THEN ('(ACC) Zafiro E')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carla Breitkreitz'; 'Mirian Souza'; 'Virginia Rosano'))
+    THEN ('(ACCI) Artigas')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Bastos'; 'Claudia Martínez'; 'Nadia Monzon'; 'Nancy Barboza'; 'Natalia Quilici'; 'Paola Varela'; 'Virginia Carnelli';
+    'Gissel Cardozo'))
+    THEN ('(ACCI) Canelones')    
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Mungay'; 'Bettina Alvarez Severo'; 'Ivone Antoria'; 'Maximiliano Torres'))
+    THEN ('(ACCI) Cerro Largo')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Muñoz'; 'Eloisa Cardozo'; 'Nora Villanueva'))
+    THEN ('(ACCI) Colonia')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andres Pereira'; 'Paul Montenelli'))
+    THEN ('(ACCI) Lavalleja')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Rameau'; 'Claudia Mier'; 'Claudia Rodriguez Pla'; 'Gabriela Nuñez'; 'Germán Tomas'; 'Giovana Paola Silva'; 'Ivanna Diaz Rodriguez'; 'Luis Cabrera'; 'Virginia Rodriguez'))
+    THEN ('(ACCI) Maldonado')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Nancy Camejo'))
+    THEN ('(ACCI) Oficiales Interior')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Shirley Zuccolini'))
+    THEN ('(ACCI) Río Negro')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Janina Gomez'))
+    THEN ('(ACCI) Rivera')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Verónica Echeto'; 'Victor Bentos'))
+    THEN ('(ACCI) Rocha')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Gabriela Duarte Moraes'; 'Gerardo Padron'))
+    THEN ('(ACCI) Salto')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Sellanes'; 'Nicolás Ramos'))
+    THEN ('(ACCI) San José')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Guido'; 'Mauricio Fregeiro'))
+    THEN ('(ACCI) Soriano')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Gustavo Franchi'; 'Sandra Sosa'))
+    THEN ('(ACCI) Tacuarembó')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Magrit Morales'))
+    THEN ('(ACCI) Treinta y Tres')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Fermin Lugo'))
+    THEN ('(ACCI) Flores')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Javier Rodriguez'))
+    THEN ('(ACCI) Florida')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Ivana Pimienta'))
+    THEN ('(ACCI) Durazno')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Shirley Sequeira'))
+    THEN ('(ACCI) Paysandú')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Agentes de Ventas'; 'Leticia Martinez'; 'Tazio Scaldaferri'))
+    THEN ('(ADV) Agentes de Venta')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Elizabeth Techeira'; 'Rosa Acosta'; 'Valeria Alzugaray'; 'Antonella Silva'; 'Valentina Martinez'; 'Silvia Ruiz'))
+    THEN ('(ACPY) Atención Pymes')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Patricia Aguinaga'; 'Cristian Recalde'; 'Julio F. Gaye Piazze'; 'Julio Storace'; 'Marcela Alonso'; 'Referentes DC'; 'Silvia Rocco'))
+    THEN ('(ACC) DataCenter')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Javier Gimenez'; 'Luciana Regalot'; 'Mariana Suarez'; 'Natalia Gabriela Gadea Martinez'; 'Paola Rambalducci'; 'Susana Jimenez'))
+    THEN ('(ACPC) Proyectos')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Maria Calcaterra'))
+    THEN ('(MVD) Ventas Internacionales')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Ventas Internacionales'))
+    THEN (('(MVD) Ventas Internacionales'))
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Gustavo Daniel Pelayo'; 'Andrea Joselyn Lima'; 'Cecilia Pedetti'; 'Gaston Landin'; 'Marianela Rodriguez'; 'Ventas Pymes'; 'Victoria Alvarez'))
+    THEN ('(ACPY) Ventas Pymes')
+    
+    ELSE ('(sin grupo)')
+
+
+
+--------------------------------------------------------------------------------------------
+
+Grupo Ejecutivo (dic23)(outdated)=
+if (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Alejandra Flores'; 'Cecilia Sorrondegui'; 'Fabian Nuñez'; 'Javier Camargo'; 'Marcelo Miguel Salvia'; 'Natalia Rabela'; 'Virginia Molina'; 'Ventas Corporativas'))
+    THEN ('(ACC) Nuevos Negocios')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Jefes Unidad Cuentas Privadas'))
+    THEN ('(ACC Privados Jefa)')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Lourdes Araujo'; 'Cecilia Lujan Morales'; 'Edurne Miralles'; 'Leticia Acuña'; 'Maria Virginia Carriquiry'; 'Norberto Ricardo Viana'))
+    THEN ('(ACC) Oficiales A')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Federico Eduardo Perez'; 'Javier Ignacio Izquierdo'; 'Marcelo Paiva'; 'Ruben Dondan'))
+    THEN ('(ACC) Oficiales B')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alexis Jorge Sanz'; 'Claudia Carolina Garcia'; 'Fabian Chollet'; 'Natalia Puchkariov'; 'Oficiales C'))
+    THEN ('(ACC) Oficiales C')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Leticia Elizabeth Sanchez'))
+    THEN ('(ACC) Oficiales Jefa')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Cecilia Dogliotti'; 'Leonardo Delorrio'; 'Maria Jose Gonzalez'; 'Ramiro Fuster'))
+    THEN ('(ACC) Privados A')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Daniel Molares'; 'Gustavo Delgado'; 'Javier Forestero'; 'Pablo Vazquez'))
+    THEN ('(ACC) Privados C')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Ana Laura Da Silva'; 'Claudia Rodriguez Fernandez'; 'Claudia Sanchez'; 'Tania Techera'; 'Veronica Ferrer'))
+    THEN ('(ACC) Privados D')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Maria de los Angeles Dorado'; 'Mariela Flores'; 'Noelia Larrosa'; 'Pablo Solari'))
+    THEN ('(ACC) Privados E')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alejandra Mera'; 'Lilian Ramenghi'; 'Mariela Garcia'; 'Viviana Rivoira'))
+    THEN ('(ACC) Privados F')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Cesar Sebastián Huelmo Pereyra'; 'Fernando Maidana'; 'Maria Eugenia Lecchini'; 'Maria Noel Martin'))
+    THEN ('(ACC) Privados G')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Claudia Moraes'; 'Florencia Gazzano'; 'Nicolás Ferrer'))
+    THEN ('(ACC) Privados I')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Moreno'; 'Leticia Souto'; 'Lucila Beatriz Rodriguez'; 'Valeria Sosa Urga'))
+    THEN ('(ACC) Privados J')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Demedice'; 'Franco Lazzarini'; 'Jorge Vidal'; 'Patricia Echavarria'))
+    THEN ('(ACC) Privados K')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Marcela Bruffau'; 'Jhonatan Toraval'))
+    THEN ('(ACC) Privados VIP')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alejandra Maria Aranda Peña'; 'Andrea Veronica Cajiga Curbelo'; 'Marisa Lencina Martignoni'; 'Patricia Morales Odllakovich';'Victoria Sierig'))
+    THEN ('(ACC) Zafiro A')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carmen Esther Bargo Ojeda'; 'Gabriel Brun Lafalche'; 'Gabriela De Los Santos Dominguez'; 'Paola Adelina Ivani Mondelli'; 'Sandra Izquierdo Gonzalez'; 'Tania Almeida'))
+    THEN ('(ACC) Zafiro B')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Ortega Yamgochian'; 'Danilo Cesar Marega Rognoni'; 'Marcelo Savio'; 'Maximiliano Alegre Algazi'))
+    THEN ('(ACC) Zafiro D')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alicia Velazquez'; 'Gerard Mayayo'; 'Martin Robert Brioso Olivera'; 'Mauricio Suárez'))
+    THEN ('(ACC) Zafiro E')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Carlos Dalmao'))
+    THEN ('(ACC) Zafiro Jefe')
+
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carla Breitkreitz'; 'Mirian Souza'; 'Virginia Rosano'))
+    THEN ('(ACCI) Artigas')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Bastos'; 'Claudia Martínez'; 'Nadia Monzon'; 'Nancy Barboza'; 'Natalia Quilici'; 'Paola Varela'; 'Virginia Carnelli';
+    'Gissel Cardozo'))
+    THEN ('(ACCI) Canelones')    
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Mungay'; 'Bettina Alvarez Severo'; 'Ivone Antoria'; 'Maximiliano Torres'))
+    THEN ('(ACCI) Cerro Largo')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Muñoz'; 'Eloisa Cardozo'; 'Nora Villanueva'))
+    THEN ('(ACCI) Colonia')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andres Pereira'; 'Paul Montenelli'))
+    THEN ('(ACCI) Lavalleja')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Rameau'; 'Claudia Mier'; 'Claudia Rodriguez Pla'; 'Gabriela Nuñez'; 'Germán Tomas'; 'Giovana Paola Silva'; 'Ivanna Diaz Rodriguez'; 'Luis Cabrera'; 'Virginia Rodriguez'))
+    THEN ('(ACCI) Maldonado')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Nancy Camejo'))
+    THEN ('(ACCI) Oficiales Interior')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Shirley Zuccolini'))
+    THEN ('(ACCI) Río Negro')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Janina Gomez'))
+    THEN ('(ACCI) Rivera')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Verónica Echeto'; 'Victor Bentos'))
+    THEN ('(ACCI) Rocha')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Gabriela Duarte Moraes'; 'Gerardo Padron'))
+    THEN ('(ACCI) Salto')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Sellanes'; 'Nicolás Ramos'))
+    THEN ('(ACCI) San José')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Guido'; 'Mauricio Fregeiro'))
+    THEN ('(ACCI) Soriano')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Gustavo Franchi'; 'Sandra Sosa'))
+    THEN ('(ACCI) Tacuarembó')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Magrit Morales'))
+    THEN ('(ACCI) Treinta y Tres')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Fermin Lugo'))
+    THEN ('(ACCI) Flores')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Javier Rodriguez'))
+    THEN ('(ACCI) Florida')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Ivana Pimienta'))
+    THEN ('(ACCI) Durazno')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Shirley Sequeira'))
+    THEN ('(ACCI) Paysandú')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Agentes de Ventas'; 'Leticia Martinez'; 'Tazio Scaldaferri'))
+    THEN ('(ADV) Agentes de Venta')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Elizabeth Techeira'; 'Rosa Acosta'; 'Valeria Alzugaray'; 'Antonella Silva'; 'Valentina Martinez'; 'Silvia Ruiz'))
+    THEN ('(ACPY) Atención Pymes')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Patricia Aguinaga'; 'Cristian Recalde'; 'Julio F. Gaye Piazze'; 'Julio Storace'; 'Marcela Alonso'; 'Referentes DC'; 'Silvia Rocco'))
+    THEN ('(ACC) DataCenter')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Javier Gimenez'; 'Luciana Regalot'; 'Mariana Suarez'; 'Natalia Gabriela Gadea Martinez'; 'Paola Rambalducci'; 'Susana Jimenez'))
+    THEN ('(ACPC) Proyectos')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Maria Calcaterra'))
+    THEN ('(MVD) Ventas Internacionales')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Ventas Internacionales'))
+    THEN (('(MVD) Ventas Internacionales'))
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Gustavo Daniel Pelayo'; 'Andrea Joselyn Lima'; 'Cecilia Pedetti'; 'Gaston Landin'; 'Marianela Rodriguez'; 'Ventas Pymes'; 'Victoria Alvarez'))
+    THEN ('(ACPY) Ventas Pymes')
+    
+    ELSE ('(sin grupo)')
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Grupo Ejecutivo (feb24)=
+if (Grupo_Ejecutivo in ('(ACC) Oficiales A'; '(ACC) Oficiales B'; '(ACC) Oficiales C'; '(ACC) Oficiales Jefa'))
+    then ('(ACC) Oficiales')
+    
+else if (Grupo_Ejecutivo = ('(ACC) Nuevos Negocios')) 
+    then ('(ACC) Nuevos Negocios')
+    
+else if (Grupo_Ejecutivo in ('(ACC Privados Jefa)'; '(ACC) Privados A'; '(ACC) Privados C'; '(ACC) Privados D'; '(ACC) Privados E'; '(ACC) Privados F'; '(ACC) Privados G'; 
+    '(ACC) Privados I'; '(ACC) Privados J'; '(ACC) Privados K'; '(ACC) Privados VIP'))
+    then ('(ACC) Privados')
+    
+else if (Grupo_Ejecutivo in ('(ACC) Zafiro A';'(ACC) Zafiro B';'(ACC) Zafiro C' ;'(ACC) Zafiro D';'(ACC) Zafiro E';'(ACC) Zafiro Jefe'))
+    then ('(ACC) Zafiro')
+
+else if (Grupo_Ejecutivo in ('(ACCI) Artigas'; '(ACCI) Río Negro';'(ACCI) Rivera';'(ACCI) Salto';'(ACCI) Tacuarembó'; '(ACCI) Paysandú'))
+    then ('(ACCI) Zona Norte')
+
+else if (Grupo_Ejecutivo in ('(ACCI) San José';'(ACCI) Soriano';'(ACCI) Canelones';'(ACCI) Colonia';'(ACCI) Flores';'(ACCI) Florida';'(ACCI) Durazno'))
+    then ('(ACCI) Zona Oeste')
+
+else if (Grupo_Ejecutivo in ('(ACCI) Treinta y Tres';'(ACCI) Rocha';'(ACCI) Maldonado';'(ACCI) Cerro Largo';'(ACCI) Lavalleja';'(ACCI) Oficiales Interior'))
+    then ('(ACCI) Zona Este')
+
+else if (Grupo_Ejecutivo = ('(ADV) Agentes de Venta')) 
+    then ('(ADV) Agentes de Venta')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Atención Pymes')) 
+    then ('(ACPY) Atención Pymes')
+    
+else if (Grupo_Ejecutivo = ('(ACC) DataCenter')) 
+    then ('(ACC) DataCenter')
+    
+else if (Grupo_Ejecutivo = ('(ACPC) Proyectos')) 
+    then ('(ACPC) Proyectos')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Ventas Pymes')) 
+    then ('(ACPY) Ventas Pymes')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Atención Pymes')) 
+    then ('(ACPY) Atención Pymes')
+    
+else if (Grupo_Ejecutivo = ('(MVD) Ventas Internacionales')) 
+    then ('(MVD) Ventas Internacionales')
+    
+else ('(sin unidad)')
+
+------------------------------------------------------------------------------------------------------
+
+(test) - Subsegmento OFI=
+IF ( COD_TIPO_DOCUMENTO = 'PUB' OR ROL_EJECUTIVO_ASIGNADO_VTIGER = 'Ejecutivo Cuentas Oficiales' OR CATEGORIA_CLIENTE_VTIGER = 'Oficial' ) THEN 
+// falta verificar asignación
+        ( 'OFICIALES' ) ELSE
+                IF ( (PROM_FACT_FIJA_6_MESES + PROM_FACT_DATOS_6_MESES + PROM_FACT_MOVIL_6_MESES) > 100000 ) THEN
+                          ( 'ZAFIRO' ) ELSE  
+                                IF ( PROM_FACT_FIJA_6_MESES + PROM_FACT_DATOS_6_MESES + PROM_FACT_MOVIL_6_MESES > 20000 )  THEN     
+                                         ( 'PRIVADOS' ) ELSE  ('PYMES')
+
+----------------------------------------------------------------------------------------------------
+
+test2 - Agregacion oficiales nivel 1=
+IF (DOCUMENTO starts with '01') THEN ('PODER LEGISLATIVO') ELSE
+IF (DOCUMENTO starts with '02') THEN ('PRESIDENCIA') ELSE
+IF (DOCUMENTO starts with '03') THEN ('MINISTERIO DE DEFENSA') ELSE
+IF (DOCUMENTO starts with '04') THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF (DOCUMENTO starts with '05') THEN ('MINISTERIO DE ECONOMIA Y FINAN') ELSE
+IF (DOCUMENTO starts with '06') THEN ('MINISTERIO DE RELACIONES EXT.') ELSE
+IF (DOCUMENTO starts with '07') THEN ('MINISTERIO DE GANADERIA') ELSE
+IF (DOCUMENTO starts with '08') THEN ('MINISTERIO DE IND.Y ENERGIA') ELSE
+IF (DOCUMENTO starts with '09') THEN ('MINISTERIO DE TURISMO') ELSE
+IF (DOCUMENTO starts with '10') THEN ('MINISTERIO DE TRANSP. Y OBRAS') ELSE
+IF (DOCUMENTO starts with '11') THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF (DOCUMENTO starts with '12') THEN ('MINISTERIO DE SALUD PUBLICA') ELSE
+IF (DOCUMENTO starts with '13') THEN ('MINISTERIO DE TRABAJO Y SEGUR.') ELSE
+IF (DOCUMENTO starts with '14') THEN ('MINISTERIO DE VIVIENDA') ELSE
+IF (DOCUMENTO starts with '15') THEN ('MINISTERIO DE DEPORTE Y JUVENT') ELSE
+IF (DOCUMENTO starts with '16') THEN ('PODER JUDICIAL') ELSE
+IF (DOCUMENTO starts with '17') THEN ('TRIBUNAL DE CUENTAS') ELSE
+IF (DOCUMENTO starts with '18') THEN ('CORTE ELECTORAL') ELSE
+IF (DOCUMENTO starts with '19') THEN ('TRIBUNAL DE LO CONTENCIOSO') ELSE
+IF (DOCUMENTO starts with '20') THEN ('DIST. DE GAS MONTEVIDEO - PETROBRAS (*)') ELSE
+IF (DOCUMENTO starts with '22') THEN ('VARIOS') ELSE
+IF (DOCUMENTO starts with '24') THEN ('B.P.S.') ELSE
+IF (DOCUMENTO starts with '25') THEN ('CONSEJO NACIONAL DE EDUCACION') ELSE
+IF (DOCUMENTO starts with '26') THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF (DOCUMENTO starts with '27') THEN ('INSTITUTO DEL MENOR') ELSE
+IF (DOCUMENTO starts with '29') THEN ('A.S.S.E.') ELSE
+IF (DOCUMENTO starts with '31') THEN ('U.T.E.C.') ELSE
+IF (DOCUMENTO starts with '32') THEN ('I.N.U.M.E.T(METEOROLOGIA)') ELSE
+IF (DOCUMENTO starts with '33') THEN ('FISCALIA GENERAL DE LA NACION') ELSE
+IF (DOCUMENTO starts with '34') THEN ('JUTEP') ELSE
+IF (DOCUMENTO starts with '35') THEN ('INISA') ELSE
+IF (DOCUMENTO starts with '36') THEN ('MINISTERIO DE AMBIENTE') ELSE
+IF (DOCUMENTO starts with '50') THEN ('BANCO CENTRAL DEL URUGUAY') ELSE
+IF (DOCUMENTO starts with '51') THEN ('B.R.O.U.') ELSE
+IF (DOCUMENTO starts with '52') THEN ('B.H.U.') ELSE
+IF (DOCUMENTO starts with '53') THEN ('B.S.E.') ELSE
+IF (DOCUMENTO starts with '60') THEN ('A.N.C.A.P.') ELSE
+IF (DOCUMENTO starts with '61') THEN ('U.T.E.') ELSE
+IF (DOCUMENTO starts with '62') THEN ('A.F.E.') ELSE
+IF (DOCUMENTO starts with '63') THEN ('P.L.U.N.A.') ELSE
+IF (DOCUMENTO starts with '64') THEN ('A.N.P.') ELSE
+IF (DOCUMENTO starts with '66') THEN ('O.S.E.') ELSE
+IF (DOCUMENTO starts with '67') THEN ('DIRECCION NACIONAL DE CORREOS') ELSE
+IF (DOCUMENTO starts with '68') THEN ('AGENCIA NACIONAL DE VIVIENDA') ELSE
+IF (DOCUMENTO starts with '69') THEN ('URSEA') ELSE
+IF (DOCUMENTO starts with '70') THEN ('INSTITUTO DE COLONIZACION') ELSE
+IF (DOCUMENTO starts with '71') THEN ('URSEC') ELSE
+IF (DOCUMENTO starts with '80') THEN ('INTENDENCIA MPAL. DE ARTIGAS') ELSE
+IF (DOCUMENTO starts with '81') THEN ('INTENDENCIA MPAL. DE CANELONES') ELSE
+IF (DOCUMENTO starts with '82') THEN ('INTENDENCIA MPAL. CERRO LARGO') ELSE
+IF (DOCUMENTO starts with '83') THEN ('INTENDENCIA MPAL. DE COLONIA') ELSE
+IF (DOCUMENTO starts with '84') THEN ('INTENDENCIA MPAL. DE DURAZNO') ELSE
+IF (DOCUMENTO starts with '85') THEN ('INTENDENCIA MPAL. DE FLORES') ELSE
+IF (DOCUMENTO starts with '86') THEN ('INTENDENCIA MPAL. DE FLORIDA') ELSE
+IF (DOCUMENTO starts with '87') THEN ('INTENDENCIA MPAL. DE LAVALLEJA') ELSE
+IF (DOCUMENTO starts with '88') THEN ('INTENDENCIA MPAL. DE MALDONADO') ELSE
+IF (DOCUMENTO starts with '89') THEN ('INTENDENCIA MPAL. DE PAYSANDU') ELSE
+IF (DOCUMENTO starts with '90') THEN ('INTENDENCIA MPAL. DE RIO NEGRO') ELSE
+IF (DOCUMENTO starts with '91') THEN ('INTENDENCIA MPAL. DE RIVERA') ELSE
+IF (DOCUMENTO starts with '92') THEN ('INTENDENCIA MPAL. DE ROCHA') ELSE
+IF (DOCUMENTO starts with '93') THEN ('INTENDENCIA MPAL. DE SALTO') ELSE
+IF (DOCUMENTO starts with '94') THEN ('INTENDENCIA MPAL. DE SAN JOSE') ELSE
+IF (DOCUMENTO starts with '95') THEN ('INTENDENCIA MPAL. DE SORIANO') ELSE
+IF (DOCUMENTO starts with '96') THEN ('INTENDENCIA MPAL. TACUAREMBO') ELSE
+IF (DOCUMENTO starts with '97') THEN ('INTENDENCIA M. TREINTA Y TRES') ELSE
+IF (DOCUMENTO starts with '98') THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF (PARTY_ID = '4363959') THEN ('MINISTERIO DE EDUC. Y CULTURA')
+ELSE ('NADA')
+
+---------------------------------------------------------------------------------------
+
 Agregación Nivel 2 Oficiales (UE):
 
 IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '211962820014' ) ) THEN ('O.S.E.') ELSE
