@@ -1,0 +1,1642 @@
+Cálculos de Cognos:
+------------------------------------------------------
+Acumulado Fact Total Mes (2023 - Activos)=
+running-total (Fact Total Mes (2023 - Activos))
+
+Fact Total Mes (2023 - Activos)=
+total (case when ( ACTIVO_MDM = 'Activo' and FECHA_PRODUCCION starts with '2023' ) THEN Total_Fact_Mes ELSE 0 END)
+-----------------------------------------------------
+
+Part. de Clientes Emp. en Total Ingresos ANTEL=
+(Fact_Total_Mes_2023_Activos / Fact_Total_de_Antel_dato_de_AEE)
+
+------------------------------------------------------------
+
+
+(dic22) Cant. Clientes ZAFIRO=
+COUNT ( DISTINCT (CASE WHEN ( FECHA_PRODUCCION = '202212' AND Subsegmento = 'ZAFIRO' and ACTIVO_MDM = 'Activo') THEN PARTY_ID ELSE NULL END) for report )
+
+
+(dic22) Cant. Clientes Priv. con Fact. mayor a $ 20.000=
+COUNT ( DISTINCT (CASE WHEN ( FECHA_PRODUCCION = '202212' AND Subsegmento in ('PRIVADOS';'ZAFIRO') and ACTIVO_MDM = 'Activo') THEN PARTY_ID ELSE NULL END) for report )
+
+Diferencia de Fact. Total (dic22 a dic23)=
+case when ( ( FECHA_PRODUCCION = '202312') ) then Total_Fact_1 else 0 end -
+case when ( ( FECHA_PRODUCCION = '202212' ) ) then Total_Fact_1 else 0 end 
+
+
+Porc. Fact. Pymes Mes en Total Corp. Mes=
+total ((case when (Subsegmento = 'PYMES') then Total_Fact_1 end)) 
+/ total (Total_Fact_1)
+
+
+Fact. Pymes Mes=
+total ((case when (Subsegmento = 'PYMES') then Total_Fact_1 end)) 
+
+
+Variación Cant. Clientes Pymes (a dic22)=
+( Cant_Clientes_Pymes / i_DIC_22_Cant_Clientes_Pymes ) - 1
+
+
+Cant_Clientes_Pymes=
+count (case when ((Subsegmento = 'PYMES')) then 1 else 0 end)
+
+Variación Cant. Clientes Zafiro (a dic22)=
+( Cant_Clientes_Zafiro / i_DIC_22_Cant_clientes_Zafiro ) - 1
+
+Cant. Clientes Zafiro=
+count (case when ((Subsegmento = 'ZAFIRO')) then 1 end)
+
+Cant clientes privados fact > 20k=
+count (case when ((Total_Fact > 20000) and not (Subsegmento = 'OFICIALES')) then 1 end)
+
+Zona (Mvd/Int)=
+if (Zona_Cliente in ('ZONA NORTE';'ZONA ESTE';'ZONA OESTE')) then ('INTERIOR') else ('MONTEVIDEO')
+
+
+Facturación Acumulada 2023=
+(case when FECHA_PRODUCCION starts with '2023' then (Total_Fact) else 0 end) 
+
+
+(DIC-22) Cant. clientes Zafiro=
+370
+
+Variación Cant. Clientes Priv. Fact 20k (a dic22)=
+( Cant_clientes_privados_fact_20k / i_DIC_22_Cant_clientes_privados_con_fact_20K) - 1
+
+
+(DIC-22) Cant. clientes privados con fact. >20K=
+2365
+
+Zona Cliente=
+if (DEPARTAMENTO_CLIENTE in (
+'MALDONADO';'ROCHA';'TREINTA Y TRES';'CERRO LARGO';'LAVALLEJA') )
+   then ('ZONA ESTE')
+   else if (DEPARTAMENTO_CLIENTE in ('CANELONES';'SAN JOSE';'SAN JOSÉ';'FLORES';'FLORIDA';'COLONIA';'DURAZNO';'SORIANO'   ) )
+       then ('ZONA OESTE')
+       
+   else if (DEPARTAMENTO_CLIENTE in ('ARTIGAS'; 'SALTO'; 'PAYSANDÚ';'PAYSANDU';'RIO NEGRO'; 'RÍO NEGRO';'TACUAREMBO'; 'TACUAREMBÓ'; 'RIVERA') )
+       then ('ZONA NORTE')
+       
+   else if (DEPARTAMENTO_CLIENTE in ('MONTEVIDEO') )
+       then ('ZONA MONTEVIDEO')       
+
+      else ('(sin dato)')
+
+
+Asignación=
+if  (FECHA_PRODUCCION = ('202310') and EJECUTIVO_ASIGNADO_VTIGER = ('@empresas') )
+    then ('Carolina Ortega Yamgochian') 
+    else if (EJECUTIVO_ASIGNADO_VTIGER in ('administrador'; 'null null') )
+        then ('(No asignados)') 
+    else (EJECUTIVO_ASIGNADO_VTIGER)
+
+Total Fact Mes=
+(TOTAL_FACT_DATOS + TOTAL_FACT_FIJA + TOTAL_FACT_MOVIL)
+
+ARPU Servicios=
+( TOTAL_FACT_FIJA + TOTAL_FACT_DATOS + TOTAL_FACT_MOVIL ) / ( CANT_SERVICIOS_FIJA + CANT_SERVICIOS_DATOS + CANT_SERVICIOS_MOVIL )
+
+
+(M) Variación fact total respecto a dic22 (pendient)=
+(case when FECHA_PRODUCCION = '202312' then (Total_Fact) else 0 end) / 
+(case when FECHA_PRODUCCION = '202212' then (Total_Fact) else 0 end)
+
+
+
+Fact > 100k = 
+case when (PROM_FACT_FIJA_6_MESES + PROM_FACT_DATOS_6_MESES + PROM_FACT_MOVIL_6_MESES) > 100000 then 'Si' else 'No' end
+
+Clientes con fact. mensual mayor a $ 100.000 =
+case when ( Total_Fact_Mes >= 100000 ) then ('Fact. mayor a $ 100.000') else ('Fact. hasta $ 99.999') end
+
+
+
+Prom Fact Total 6 Meses =
+(PROM_FACT_FIJA_6_MESES + PROM_FACT_DATOS_6_MESES + PROM_FACT_MOVIL_6_MESES)
+
+
+
+Subsegmento = 
+IF ( COD_TIPO_DOCUMENTO = 'PUB' OR ROL_EJECUTIVO_ASIGNADO_VTIGER = 'Ejecutivo Cuentas Oficiales' ) THEN 
+// falta verificar asignación
+        ( 'OFICIALES' ) ELSE
+                IF ( (PROM_FACT_FIJA_6_MESES + PROM_FACT_DATOS_6_MESES + PROM_FACT_MOVIL_6_MESES) > 100000 ) THEN
+                          ( 'ZAFIRO' ) ELSE  
+                                IF ( PROM_FACT_FIJA_6_MESES + PROM_FACT_DATOS_6_MESES + PROM_FACT_MOVIL_6_MESES > 20000 )  THEN     
+                                         ( 'PRIVADOS' ) ELSE  ('PYMES')
+
+
+
+Tienen Móvil=
+(count( (case when CANT_SERVICIOS_MOVIL > 0 then 1 end) )  
+/
+count( (case when CANT_SERVICIOS_MOVIL >= 0  then 1 end)))
+
+
+Tienen Datos=
+(count( (case when CANT_SERVICIOS_DATOS > 0 then 1 end))
+/
+count( (case when CANT_SERVICIOS_DATOS >= 0  then 1 end)))
+
+
+Tienen Fija=
+(count( (case when CANT_SERVICIOS_FIJA > 0 then 1 end))
+/
+count( (case when CANT_SERVICIOS_FIJA >= 0  then 1 end)))
+
+
+Fact Total Mensual (prom. 6m)=
+(PROM_FACT_FIJA_6_MESES + PROM_FACT_DATOS_6_MESES + PROM_FACT_MOVIL_6_MESES )
+
+
+ARPU Clientes=
+Total_Fact / count( (case when PARTY_ID > 0 then 1 end))
+
+
+Fact Neta=
+Total_Fact - (SALDO_ADEUDADO_FACM + FINANCIACION_ESPECIAL_FACM + EQUIPOS_ACCESORIOS_FACM)
+
+
+Porc clientes priv fact > 20k con móvil=
+count( (case when ((CANT_SERVICIOS_MOVIL > 0) and (Total_Fact > 20000) and not ( Subsegmento = 'OFICIALES'))  then 1 end))  
+/
+count( (case when ((CANT_SERVICIOS_MOVIL >= 0)  and (Total_Fact > 20000) and not ( Subsegmento = 'OFICIALES') ) then 1 end))
+
+
+Cant clientes privados fact > 20k=
+count (case when ((Total_Fact > 20000) and not (Subsegmento = 'OFICIALES')) then 1 end)
+
+
+(M) Variación clientes priv fact > 20k=
+(count( (case when ((Total_Fact > 20000) and not ( Subsegmento = 'OFICIALES')
+    and (FECHA_PRODUCCION = '202309'))  then 1 end)) 
+/
+count( (case when ((Total_Fact > 20000) and not ( Subsegmento = 'OFICIALES')
+    and (FECHA_PRODUCCION = '202212')) then 1 end))) -1
+
+
+(M) Mant Cant clientes Zafiro a respecto a dic22=
+(count (case when ((Subsegmento = 'ZAFIRO') and (FECHA_PRODUCCION = '202309') )  then 1 end) /
+count (case when ((Subsegmento = 'ZAFIRO') and (FECHA_PRODUCCION = '202212') ) then 1 end)) -1
+
+
+(M) Variación fact total respecto a dic22 (pendient)=
+(case when FECHA_PRODUCCION = '202309' then (Total_Fact) else 0 end) / 
+(case when FECHA_PRODUCCION = '202212' then (Total_Fact) else 0 end)
+
+
+(M) Mant Cant clientes Zafiro a respecto a dic22
+(count (case when ((Subsegmento = 'ZAFIRO') and (FECHA_PRODUCCION = '202312') )  then 1 end) 
+/
+count (case when ((Subsegmento = 'ZAFIRO') and (FECHA_PRODUCCION = '202212') ) then 1 end)) -1
+
+
+(M) Variación clientes priv fact > 20k=
+(count( (case when ((Total_Fact > 20000) and not ( Subsegmento = 'OFICIALES')
+    and (FECHA_PRODUCCION = '202312'))  then 1 end)) 
+/
+count( (case when ((Total_Fact > 20000) and not ( Subsegmento = 'OFICIALES')
+    and (FECHA_PRODUCCION = '202212')) then 1 end))) -1
+
+Porc clientes priv fact > 20k con móvil=
+count( (case when ((CANT_SERVICIOS_MOVIL > 0) and (Total_Fact > 20000) and not ( Subsegmento = 'OFICIALES'))  then 1 end))  
+/
+count( (case when ((CANT_SERVICIOS_MOVIL >= 0)  and (Total_Fact > 20000) and not ( Subsegmento = 'OFICIALES') ) then 1 end))
+
+
+
+
+
+Facturación total ANTEL=
+if (FECHA_PRODUCCION = '202208') then (3398508673) else
+if (FECHA_PRODUCCION = '202209') then (3407029598) else
+if (FECHA_PRODUCCION = '202210') then (3365876759) else
+if (FECHA_PRODUCCION = '202211') then (3413825618) else
+if (FECHA_PRODUCCION = '202212') then (3659424124) else
+if (FECHA_PRODUCCION = '202301') then (3459207344) else
+if (FECHA_PRODUCCION = '202302') then (3493751290) else
+if (FECHA_PRODUCCION = '202303') then (3607124662) else
+if (FECHA_PRODUCCION = '202304') then (3451335635) else
+if (FECHA_PRODUCCION = '202305') then (3465985620) else
+if (FECHA_PRODUCCION = '202306') then (3507131210) else
+if (FECHA_PRODUCCION = '202307') then (4014812688) else
+if (FECHA_PRODUCCION = '202308') then (3634701036) else
+if (FECHA_PRODUCCION = '202309') then (3576358674) else (0)
+
+
+Porc fact corporativos en total Antel=
+Total_Fact / Facturación_total_ANTEL
+
+
+Fact Total Mes=
+(TOTAL_FACT_FIJA + TOTAL_FACT_DATOS + TOTAL_FACT_MOVIL)
+
+
+Zona=
+if (DEPARTAMENTO_CLIENTE in ('MALDONADO'; 'ROCHA'; 'TREINTA Y TRES'; 'CERRO LARGO'; 'LAVALLEJA'))
+    then ('ESTE')
+    
+    else if (DEPARTAMENTO_CLIENTE in ('CANELONES'; 'SAN JOSE'; 'FLORES'; 'FLORIDA'; 'COLONIA'; 'DURAZNO'; 'SORIANO'))
+    then ('OESTE')
+    
+
+    else if (DEPARTAMENTO_CLIENTE in ('ARTIGAS'; 'SALTO'; 'PAYSANDU'; 'RIO NEGRO'; 'TACUAREMBO'; 'RIVERA' ))
+    then ('NORTE')
+    
+    else if (DEPARTAMENTO_CLIENTE in ('MONTEVIDEO'))
+    then ('MONTEVIDEO')
+    
+    else ('(sin dato)')
+
+ARPU Servicios=
+( TOTAL_FACT_FIJA + TOTAL_FACT_DATOS + TOTAL_FACT_MOVIL ) / 
+( CANT_SERVICIOS_FIJA + CANT_SERVICIOS_DATOS + CANT_SERVICIOS_MOVIL )
+
+
+ARPU Móvil=
+(TOTAL_FACT_MOVIL / CANT_SERVICIOS_MOVIL)
+
+
+ARPU Datos=
+(TOTAL_FACT_DATOS / CANT_SERVICIOS_DATOS)
+
+
+ARPU Fija=
+(TOTAL_FACT_FIJA / CANT_SERVICIOS_FIJA)
+
+
+-------------------------------------------------------------------------------------------
+
+Unidad Ejecutivo (dic23)(outdated) =
+if (Grupo_Ejecutivo in ('(ACC) Oficiales A'; '(ACC) Oficiales B'; '(ACC) Oficiales C'; '(ACC) Oficiales Jefa'))
+    then ('(ACC) Oficiales')
+    
+else if (Grupo_Ejecutivo = ('(ACC) Nuevos Negocios')) 
+    then ('(ACC) Nuevos Negocios')
+    
+else if (Grupo_Ejecutivo in ('(ACC Privados Jefa)'; '(ACC) Privados A'; '(ACC) Privados C'; '(ACC) Privados D'; '(ACC) Privados E'; '(ACC) Privados F'; '(ACC) Privados G'; 
+    '(ACC) Privados I'; '(ACC) Privados J'; '(ACC) Privados K'; '(ACC) Privados VIP'))
+    then ('(ACC) Privados')
+    
+else if (Grupo_Ejecutivo in ('(ACC) Zafiro A';'(ACC) Zafiro B';'(ACC) Zafiro D';'(ACC) Zafiro E';'(ACC) Zafiro Jefe'))
+    then ('(ACC) Zafiro')
+
+else if (Grupo_Ejecutivo in ('(ACCI) Artigas'; '(ACCI) Río Negro';'(ACCI) Rivera';'(ACCI) Salto';'(ACCI) Tacuarembó'; '(ACCI) Paysandú'))
+    then ('(ACCI) Zona Norte')
+
+else if (Grupo_Ejecutivo in ('(ACCI) San José';'(ACCI) Soriano';'(ACCI) Canelones';'(ACCI) Colonia';'(ACCI) Flores';'(ACCI) Florida';'(ACCI) Durazno'))
+    then ('(ACCI) Zona Oeste')
+
+else if (Grupo_Ejecutivo in ('(ACCI) Treinta y Tres';'(ACCI) Rocha';'(ACCI) Maldonado';'(ACCI) Cerro Largo';'(ACCI) Lavalleja';'(ACCI) Oficiales Interior'))
+    then ('(ACCI) Zona Este')
+
+else if (Grupo_Ejecutivo = ('(ADV) Agentes de Venta')) 
+    then ('(ADV) Agentes de Venta')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Atención Pymes')) 
+    then ('(ACPY) Atención Pymes')
+    
+else if (Grupo_Ejecutivo = ('(ACC) DataCenter')) 
+    then ('(ACC) DataCenter')
+    
+else if (Grupo_Ejecutivo = ('(ACPC) Proyectos')) 
+    then ('(ACPC) Proyectos')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Ventas Pymes')) 
+    then ('(ACPY) Ventas Pymes')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Atención Pymes')) 
+    then ('(ACPY) Atención Pymes')
+    
+else if (Grupo_Ejecutivo = ('(MVD) Ventas Internacionales')) 
+    then ('(MVD) Ventas Internacionales')
+    
+else ('(sin unidad)')
+
+--------------------------------------------------------------------------------------------
+
+Unidad Ejecutivo (feb24) =
+if (Grupo_Ejecutivo in ('(ACC) Oficiales A'; '(ACC) Oficiales B'; '(ACC) Oficiales C'; '(ACC) Oficiales Jefa'))
+    then ('(ACC) Oficiales')
+    
+else if (Grupo_Ejecutivo = ('(ACC) Nuevos Negocios')) 
+    then ('(ACC) Nuevos Negocios')
+    
+else if (Grupo_Ejecutivo in ('(ACC Privados Jefa)'; '(ACC) Privados A'; '(ACC) Privados C'; '(ACC) Privados D'; '(ACC) Privados E'; '(ACC) Privados F'; '(ACC) Privados G'; 
+    '(ACC) Privados I'; '(ACC) Privados J'; '(ACC) Privados K'; '(ACC) Privados VIP'))
+    then ('(ACC) Privados')
+    
+else if (Grupo_Ejecutivo in ('(ACC) Zafiro A';'(ACC) Zafiro B';'(ACC) Zafiro C';'(ACC) Zafiro D';'(ACC) Zafiro E';'(ACC) Zafiro Jefe'))
+    then ('(ACC) Zafiro')
+
+else if (Grupo_Ejecutivo in ('(ACCI) Artigas'; '(ACCI) Río Negro';'(ACCI) Rivera';'(ACCI) Salto';'(ACCI) Tacuarembó'; '(ACCI) Paysandú'))
+    then ('(ACCI) Zona Norte')
+
+else if (Grupo_Ejecutivo in ('(ACCI) San José';'(ACCI) Soriano';'(ACCI) Canelones';'(ACCI) Colonia';'(ACCI) Flores';'(ACCI) Florida';'(ACCI) Durazno'))
+    then ('(ACCI) Zona Oeste')
+
+else if (Grupo_Ejecutivo in ('(ACCI) Treinta y Tres';'(ACCI) Rocha';'(ACCI) Maldonado';'(ACCI) Cerro Largo';'(ACCI) Lavalleja';'(ACCI) Oficiales Interior'))
+    then ('(ACCI) Zona Este')
+
+else if (Grupo_Ejecutivo = ('(ADV) Agentes de Venta')) 
+    then ('(ADV) Agentes de Venta')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Atención Pymes')) 
+    then ('(ACPY) Atención Pymes')
+    
+else if (Grupo_Ejecutivo = ('(ACC) DataCenter')) 
+    then ('(ACC) DataCenter')
+    
+else if (Grupo_Ejecutivo = ('(ACPC) Proyectos')) 
+    then ('(ACPC) Proyectos')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Ventas Pymes')) 
+    then ('(ACPY) Ventas Pymes')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Atención Pymes')) 
+    then ('(ACPY) Atención Pymes')
+    
+else if (Grupo_Ejecutivo = ('(MVD) Ventas Internacionales')) 
+    then ('(MVD) Ventas Internacionales')
+    
+else ('(sin unidad)')
+
+
+
+--------------------------------------------------------------------------------------------
+
+Grupo Ejecutivo (feb24)=
+if (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Alejandra Flores'; 'Cecilia Sorrondegui'; 'Fabian Nuñez'; 'Javier Camargo'; 'Marcelo Miguel Salvia'; 'Natalia Rabela'; 'Virginia Molina'; 'Ventas Corporativas'))
+    THEN ('(ACC) Nuevos Negocios')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Jefes Unidad Cuentas Privadas'))
+    THEN ('(ACC) Privados Jefa')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Lourdes Araujo'; 'Cecilia Lujan Morales'; 'Edurne Miralles'; 'Leticia Acuña'; 'Maria Virginia Carriquiry'))
+    THEN ('(ACC) Oficiales A')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Federico Eduardo Perez'; 'Javier Ignacio Izquierdo'; 'Marcelo Paiva'; 'Ruben Dondan' ; 'Norberto Ricardo Viana'))
+    THEN ('(ACC) Oficiales B')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alexis Jorge Sanz'; 'Yisela Yanet Da Silva' ; 'Claudia Carolina Garcia'; 'Fabian Chollet'; 'Natalia Puchkariov'; 'Oficiales C'; 'Nicolás Ferrer'))
+    THEN ('(ACC) Oficiales C')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Leticia Elizabeth Sanchez'))
+    THEN ('(ACC) Oficiales Jefa')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Cecilia Dogliotti'; 'Leonardo Delorrio'; 'Maria Jose Gonzalez'; 'Ramiro Fuster'))
+    THEN ('(ACC) Privados A')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Daniel Molares'; 'Gustavo Delgado'; 'Javier Forestero'; 'Pablo Vazquez'))
+    THEN ('(ACC) Privados C')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Ana Laura Da Silva'; 'Claudia Sanchez'; 'Tania Techera'; 'Veronica Ferrer'))
+    THEN ('(ACC) Privados D')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Maria de los Angeles Dorado'; 'Mariela Flores'; 'Noelia Larrosa'; 'Pablo Solari'))
+    THEN ('(ACC) Privados E')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alejandra Mera'; 'Lilian Ramenghi'; 'Mariela Garcia'; 'Viviana Rivoira'))
+    THEN ('(ACC) Privados F')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Cesar Sebastián Huelmo Pereyra'; 'Fernando Maidana'; 'Maria Eugenia Lecchini'; 'Maria Noel Martin'))
+    THEN ('(ACC) Privados G')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Claudia Moraes'; 'Florencia Gazzano'; 'Claudia Rodriguez Fernandez'))
+    THEN ('(ACC) Privados I')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Moreno'; 'Leticia Souto'; 'Lucila Beatriz Rodriguez'; 'Valeria Sosa Urga'))
+    THEN ('(ACC) Privados J')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Demedice'; 'Franco Lazzarini'; 'Jorge Vidal'; 'Patricia Echavarria'))
+    THEN ('(ACC) Privados K')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Marcela Bruffau'; 'Jhonatan Toraval'))
+    THEN ('(ACC) Privados VIP')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alejandra Maria Aranda Peña'; 'Andrea Veronica Cajiga Curbelo'; 'Marisa Lencina Martignoni'; 'Patricia Morales Odllakovich'))
+    THEN ('(ACC) Zafiro A')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ( 'Gabriel Brun Lafalche'; 'Paola Adelina Ivani Mondelli'; 'Sandra Izquierdo Gonzalez'; 'Tania Almeida'))
+    THEN ('(ACC) Zafiro B')
+
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carmen Esther Bargo Ojeda'; 'Gabriela De Los Santos Dominguez'; 'Victoria Sierig'))
+    THEN ('(ACC) Zafiro C')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Ortega Yamgochian'; 'Danilo Cesar Marega Rognoni'; 'Marcelo Savio'; 'Maximiliano Alegre Algazi'))
+    THEN ('(ACC) Zafiro D')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alicia Velazquez'; 'Gerard Mayayo'; 'Martin Robert Brioso Olivera'; 'Mauricio Suárez'))
+    THEN ('(ACC) Zafiro E')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carla Breitkreitz'; 'Mirian Souza'; 'Virginia Rosano'))
+    THEN ('(ACCI) Artigas')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Bastos'; 'Claudia Martínez'; 'Nadia Monzon'; 'Nancy Barboza'; 'Natalia Quilici'; 'Paola Varela'; 'Virginia Carnelli';
+    'Gissel Cardozo'))
+    THEN ('(ACCI) Canelones')    
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Mungay'; 'Bettina Alvarez Severo'; 'Ivone Antoria'; 'Maximiliano Torres'))
+    THEN ('(ACCI) Cerro Largo')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Muñoz'; 'Eloisa Cardozo'; 'Nora Villanueva'))
+    THEN ('(ACCI) Colonia')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andres Pereira'; 'Paul Montenelli'))
+    THEN ('(ACCI) Lavalleja')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Rameau'; 'Claudia Mier'; 'Claudia Rodriguez Pla'; 'Gabriela Nuñez'; 'Germán Tomas'; 'Giovana Paola Silva'; 'Ivanna Diaz Rodriguez'; 'Luis Cabrera'; 'Virginia Rodriguez'))
+    THEN ('(ACCI) Maldonado')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Nancy Camejo'))
+    THEN ('(ACCI) Oficiales Interior')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Shirley Zuccolini'))
+    THEN ('(ACCI) Río Negro')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Janina Gomez'))
+    THEN ('(ACCI) Rivera')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Verónica Echeto'; 'Victor Bentos'))
+    THEN ('(ACCI) Rocha')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Gabriela Duarte Moraes'; 'Gerardo Padron'))
+    THEN ('(ACCI) Salto')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Sellanes'; 'Nicolás Ramos'))
+    THEN ('(ACCI) San José')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Guido'; 'Mauricio Fregeiro'))
+    THEN ('(ACCI) Soriano')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Gustavo Franchi'; 'Sandra Sosa'))
+    THEN ('(ACCI) Tacuarembó')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Magrit Morales'))
+    THEN ('(ACCI) Treinta y Tres')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Fermin Lugo'))
+    THEN ('(ACCI) Flores')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Javier Rodriguez'))
+    THEN ('(ACCI) Florida')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Ivana Pimienta'))
+    THEN ('(ACCI) Durazno')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Shirley Sequeira'))
+    THEN ('(ACCI) Paysandú')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Agentes de Ventas'; 'Leticia Martinez'; 'Tazio Scaldaferri'))
+    THEN ('(ADV) Agentes de Venta')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Elizabeth Techeira'; 'Rosa Acosta'; 'Valeria Alzugaray'; 'Antonella Silva'; 'Valentina Martinez'; 'Silvia Ruiz'))
+    THEN ('(ACPY) Atención Pymes')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Patricia Aguinaga'; 'Cristian Recalde'; 'Julio F. Gaye Piazze'; 'Julio Storace'; 'Marcela Alonso'; 'Referentes DC'; 'Silvia Rocco'))
+    THEN ('(ACC) DataCenter')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Javier Gimenez'; 'Luciana Regalot'; 'Mariana Suarez'; 'Natalia Gabriela Gadea Martinez'; 'Paola Rambalducci'; 'Susana Jimenez'))
+    THEN ('(ACPC) Proyectos')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Maria Calcaterra'))
+    THEN ('(MVD) Ventas Internacionales')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Ventas Internacionales'))
+    THEN (('(MVD) Ventas Internacionales'))
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Gustavo Daniel Pelayo'; 'Andrea Joselyn Lima'; 'Cecilia Pedetti'; 'Gaston Landin'; 'Marianela Rodriguez'; 'Ventas Pymes'; 'Victoria Alvarez'))
+    THEN ('(ACPY) Ventas Pymes')
+    
+    ELSE ('(sin grupo)')
+
+
+
+--------------------------------------------------------------------------------------------
+
+Grupo Ejecutivo (dic23)(outdated)=
+if (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Alejandra Flores'; 'Cecilia Sorrondegui'; 'Fabian Nuñez'; 'Javier Camargo'; 'Marcelo Miguel Salvia'; 'Natalia Rabela'; 'Virginia Molina'; 'Ventas Corporativas'))
+    THEN ('(ACC) Nuevos Negocios')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Jefes Unidad Cuentas Privadas'))
+    THEN ('(ACC Privados Jefa)')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Lourdes Araujo'; 'Cecilia Lujan Morales'; 'Edurne Miralles'; 'Leticia Acuña'; 'Maria Virginia Carriquiry'; 'Norberto Ricardo Viana'))
+    THEN ('(ACC) Oficiales A')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Federico Eduardo Perez'; 'Javier Ignacio Izquierdo'; 'Marcelo Paiva'; 'Ruben Dondan'))
+    THEN ('(ACC) Oficiales B')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alexis Jorge Sanz'; 'Claudia Carolina Garcia'; 'Fabian Chollet'; 'Natalia Puchkariov'; 'Oficiales C'))
+    THEN ('(ACC) Oficiales C')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Leticia Elizabeth Sanchez'))
+    THEN ('(ACC) Oficiales Jefa')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Cecilia Dogliotti'; 'Leonardo Delorrio'; 'Maria Jose Gonzalez'; 'Ramiro Fuster'))
+    THEN ('(ACC) Privados A')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Daniel Molares'; 'Gustavo Delgado'; 'Javier Forestero'; 'Pablo Vazquez'))
+    THEN ('(ACC) Privados C')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Ana Laura Da Silva'; 'Claudia Rodriguez Fernandez'; 'Claudia Sanchez'; 'Tania Techera'; 'Veronica Ferrer'))
+    THEN ('(ACC) Privados D')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Maria de los Angeles Dorado'; 'Mariela Flores'; 'Noelia Larrosa'; 'Pablo Solari'))
+    THEN ('(ACC) Privados E')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alejandra Mera'; 'Lilian Ramenghi'; 'Mariela Garcia'; 'Viviana Rivoira'))
+    THEN ('(ACC) Privados F')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Cesar Sebastián Huelmo Pereyra'; 'Fernando Maidana'; 'Maria Eugenia Lecchini'; 'Maria Noel Martin'))
+    THEN ('(ACC) Privados G')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Claudia Moraes'; 'Florencia Gazzano'; 'Nicolás Ferrer'))
+    THEN ('(ACC) Privados I')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Moreno'; 'Leticia Souto'; 'Lucila Beatriz Rodriguez'; 'Valeria Sosa Urga'))
+    THEN ('(ACC) Privados J')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Demedice'; 'Franco Lazzarini'; 'Jorge Vidal'; 'Patricia Echavarria'))
+    THEN ('(ACC) Privados K')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Marcela Bruffau'; 'Jhonatan Toraval'))
+    THEN ('(ACC) Privados VIP')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alejandra Maria Aranda Peña'; 'Andrea Veronica Cajiga Curbelo'; 'Marisa Lencina Martignoni'; 'Patricia Morales Odllakovich';'Victoria Sierig'))
+    THEN ('(ACC) Zafiro A')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carmen Esther Bargo Ojeda'; 'Gabriel Brun Lafalche'; 'Gabriela De Los Santos Dominguez'; 'Paola Adelina Ivani Mondelli'; 'Sandra Izquierdo Gonzalez'; 'Tania Almeida'))
+    THEN ('(ACC) Zafiro B')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Ortega Yamgochian'; 'Danilo Cesar Marega Rognoni'; 'Marcelo Savio'; 'Maximiliano Alegre Algazi'))
+    THEN ('(ACC) Zafiro D')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Alicia Velazquez'; 'Gerard Mayayo'; 'Martin Robert Brioso Olivera'; 'Mauricio Suárez'))
+    THEN ('(ACC) Zafiro E')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Carlos Dalmao'))
+    THEN ('(ACC) Zafiro Jefe')
+
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carla Breitkreitz'; 'Mirian Souza'; 'Virginia Rosano'))
+    THEN ('(ACCI) Artigas')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Bastos'; 'Claudia Martínez'; 'Nadia Monzon'; 'Nancy Barboza'; 'Natalia Quilici'; 'Paola Varela'; 'Virginia Carnelli';
+    'Gissel Cardozo'))
+    THEN ('(ACCI) Canelones')    
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Mungay'; 'Bettina Alvarez Severo'; 'Ivone Antoria'; 'Maximiliano Torres'))
+    THEN ('(ACCI) Cerro Largo')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Muñoz'; 'Eloisa Cardozo'; 'Nora Villanueva'))
+    THEN ('(ACCI) Colonia')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andres Pereira'; 'Paul Montenelli'))
+    THEN ('(ACCI) Lavalleja')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Carolina Rameau'; 'Claudia Mier'; 'Claudia Rodriguez Pla'; 'Gabriela Nuñez'; 'Germán Tomas'; 'Giovana Paola Silva'; 'Ivanna Diaz Rodriguez'; 'Luis Cabrera'; 'Virginia Rodriguez'))
+    THEN ('(ACCI) Maldonado')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Nancy Camejo'))
+    THEN ('(ACCI) Oficiales Interior')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Shirley Zuccolini'))
+    THEN ('(ACCI) Río Negro')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Janina Gomez'))
+    THEN ('(ACCI) Rivera')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Verónica Echeto'; 'Victor Bentos'))
+    THEN ('(ACCI) Rocha')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Gabriela Duarte Moraes'; 'Gerardo Padron'))
+    THEN ('(ACCI) Salto')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Sellanes'; 'Nicolás Ramos'))
+    THEN ('(ACCI) San José')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Andrea Guido'; 'Mauricio Fregeiro'))
+    THEN ('(ACCI) Soriano')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Gustavo Franchi'; 'Sandra Sosa'))
+    THEN ('(ACCI) Tacuarembó')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Magrit Morales'))
+    THEN ('(ACCI) Treinta y Tres')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Fermin Lugo'))
+    THEN ('(ACCI) Flores')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Javier Rodriguez'))
+    THEN ('(ACCI) Florida')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Ivana Pimienta'))
+    THEN ('(ACCI) Durazno')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Shirley Sequeira'))
+    THEN ('(ACCI) Paysandú')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Agentes de Ventas'; 'Leticia Martinez'; 'Tazio Scaldaferri'))
+    THEN ('(ADV) Agentes de Venta')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Elizabeth Techeira'; 'Rosa Acosta'; 'Valeria Alzugaray'; 'Antonella Silva'; 'Valentina Martinez'; 'Silvia Ruiz'))
+    THEN ('(ACPY) Atención Pymes')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Patricia Aguinaga'; 'Cristian Recalde'; 'Julio F. Gaye Piazze'; 'Julio Storace'; 'Marcela Alonso'; 'Referentes DC'; 'Silvia Rocco'))
+    THEN ('(ACC) DataCenter')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Javier Gimenez'; 'Luciana Regalot'; 'Mariana Suarez'; 'Natalia Gabriela Gadea Martinez'; 'Paola Rambalducci'; 'Susana Jimenez'))
+    THEN ('(ACPC) Proyectos')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Maria Calcaterra'))
+    THEN ('(MVD) Ventas Internacionales')
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER = ('Ventas Internacionales'))
+    THEN (('(MVD) Ventas Internacionales'))
+    
+    ELSE IF (EJECUTIVO_ASIGNADO_VTIGER in ('Gustavo Daniel Pelayo'; 'Andrea Joselyn Lima'; 'Cecilia Pedetti'; 'Gaston Landin'; 'Marianela Rodriguez'; 'Ventas Pymes'; 'Victoria Alvarez'))
+    THEN ('(ACPY) Ventas Pymes')
+    
+    ELSE ('(sin grupo)')
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Grupo Ejecutivo (feb24)=
+if (Grupo_Ejecutivo in ('(ACC) Oficiales A'; '(ACC) Oficiales B'; '(ACC) Oficiales C'; '(ACC) Oficiales Jefa'))
+    then ('(ACC) Oficiales')
+    
+else if (Grupo_Ejecutivo = ('(ACC) Nuevos Negocios')) 
+    then ('(ACC) Nuevos Negocios')
+    
+else if (Grupo_Ejecutivo in ('(ACC Privados Jefa)'; '(ACC) Privados A'; '(ACC) Privados C'; '(ACC) Privados D'; '(ACC) Privados E'; '(ACC) Privados F'; '(ACC) Privados G'; 
+    '(ACC) Privados I'; '(ACC) Privados J'; '(ACC) Privados K'; '(ACC) Privados VIP'))
+    then ('(ACC) Privados')
+    
+else if (Grupo_Ejecutivo in ('(ACC) Zafiro A';'(ACC) Zafiro B';'(ACC) Zafiro C' ;'(ACC) Zafiro D';'(ACC) Zafiro E';'(ACC) Zafiro Jefe'))
+    then ('(ACC) Zafiro')
+
+else if (Grupo_Ejecutivo in ('(ACCI) Artigas'; '(ACCI) Río Negro';'(ACCI) Rivera';'(ACCI) Salto';'(ACCI) Tacuarembó'; '(ACCI) Paysandú'))
+    then ('(ACCI) Zona Norte')
+
+else if (Grupo_Ejecutivo in ('(ACCI) San José';'(ACCI) Soriano';'(ACCI) Canelones';'(ACCI) Colonia';'(ACCI) Flores';'(ACCI) Florida';'(ACCI) Durazno'))
+    then ('(ACCI) Zona Oeste')
+
+else if (Grupo_Ejecutivo in ('(ACCI) Treinta y Tres';'(ACCI) Rocha';'(ACCI) Maldonado';'(ACCI) Cerro Largo';'(ACCI) Lavalleja';'(ACCI) Oficiales Interior'))
+    then ('(ACCI) Zona Este')
+
+else if (Grupo_Ejecutivo = ('(ADV) Agentes de Venta')) 
+    then ('(ADV) Agentes de Venta')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Atención Pymes')) 
+    then ('(ACPY) Atención Pymes')
+    
+else if (Grupo_Ejecutivo = ('(ACC) DataCenter')) 
+    then ('(ACC) DataCenter')
+    
+else if (Grupo_Ejecutivo = ('(ACPC) Proyectos')) 
+    then ('(ACPC) Proyectos')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Ventas Pymes')) 
+    then ('(ACPY) Ventas Pymes')
+    
+else if (Grupo_Ejecutivo = ('(ACPY) Atención Pymes')) 
+    then ('(ACPY) Atención Pymes')
+    
+else if (Grupo_Ejecutivo = ('(MVD) Ventas Internacionales')) 
+    then ('(MVD) Ventas Internacionales')
+    
+else ('(sin unidad)')
+
+------------------------------------------------------------------------------------------------------
+
+(test) - Subsegmento OFI=
+IF ( COD_TIPO_DOCUMENTO = 'PUB' OR ROL_EJECUTIVO_ASIGNADO_VTIGER = 'Ejecutivo Cuentas Oficiales' OR CATEGORIA_CLIENTE_VTIGER = 'Oficial' ) THEN 
+// falta verificar asignación
+        ( 'OFICIALES' ) ELSE
+                IF ( (PROM_FACT_FIJA_6_MESES + PROM_FACT_DATOS_6_MESES + PROM_FACT_MOVIL_6_MESES) > 100000 ) THEN
+                          ( 'ZAFIRO' ) ELSE  
+                                IF ( PROM_FACT_FIJA_6_MESES + PROM_FACT_DATOS_6_MESES + PROM_FACT_MOVIL_6_MESES > 20000 )  THEN     
+                                         ( 'PRIVADOS' ) ELSE  ('PYMES')
+
+----------------------------------------------------------------------------------------------------
+
+test2 - Agregacion oficiales nivel 1=
+IF (DOCUMENTO starts with '01') THEN ('PODER LEGISLATIVO') ELSE
+IF (DOCUMENTO starts with '02') THEN ('PRESIDENCIA') ELSE
+IF (DOCUMENTO starts with '03') THEN ('MINISTERIO DE DEFENSA') ELSE
+IF (DOCUMENTO starts with '04') THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF (DOCUMENTO starts with '05') THEN ('MINISTERIO DE ECONOMIA Y FINAN') ELSE
+IF (DOCUMENTO starts with '06') THEN ('MINISTERIO DE RELACIONES EXT.') ELSE
+IF (DOCUMENTO starts with '07') THEN ('MINISTERIO DE GANADERIA') ELSE
+IF (DOCUMENTO starts with '08') THEN ('MINISTERIO DE IND.Y ENERGIA') ELSE
+IF (DOCUMENTO starts with '09') THEN ('MINISTERIO DE TURISMO') ELSE
+IF (DOCUMENTO starts with '10') THEN ('MINISTERIO DE TRANSP. Y OBRAS') ELSE
+IF (DOCUMENTO starts with '11') THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF (DOCUMENTO starts with '12') THEN ('MINISTERIO DE SALUD PUBLICA') ELSE
+IF (DOCUMENTO starts with '13') THEN ('MINISTERIO DE TRABAJO Y SEGUR.') ELSE
+IF (DOCUMENTO starts with '14') THEN ('MINISTERIO DE VIVIENDA') ELSE
+IF (DOCUMENTO starts with '15') THEN ('MINISTERIO DE DEPORTE Y JUVENT') ELSE
+IF (DOCUMENTO starts with '16') THEN ('PODER JUDICIAL') ELSE
+IF (DOCUMENTO starts with '17') THEN ('TRIBUNAL DE CUENTAS') ELSE
+IF (DOCUMENTO starts with '18') THEN ('CORTE ELECTORAL') ELSE
+IF (DOCUMENTO starts with '19') THEN ('TRIBUNAL DE LO CONTENCIOSO') ELSE
+IF (DOCUMENTO starts with '20') THEN ('DIST. DE GAS MONTEVIDEO - PETROBRAS (*)') ELSE
+IF (DOCUMENTO starts with '22') THEN ('VARIOS') ELSE
+IF (DOCUMENTO starts with '24') THEN ('B.P.S.') ELSE
+IF (DOCUMENTO starts with '25') THEN ('CONSEJO NACIONAL DE EDUCACION') ELSE
+IF (DOCUMENTO starts with '26') THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF (DOCUMENTO starts with '27') THEN ('INSTITUTO DEL MENOR') ELSE
+IF (DOCUMENTO starts with '29') THEN ('A.S.S.E.') ELSE
+IF (DOCUMENTO starts with '31') THEN ('U.T.E.C.') ELSE
+IF (DOCUMENTO starts with '32') THEN ('I.N.U.M.E.T(METEOROLOGIA)') ELSE
+IF (DOCUMENTO starts with '33') THEN ('FISCALIA GENERAL DE LA NACION') ELSE
+IF (DOCUMENTO starts with '34') THEN ('JUTEP') ELSE
+IF (DOCUMENTO starts with '35') THEN ('INISA') ELSE
+IF (DOCUMENTO starts with '36') THEN ('MINISTERIO DE AMBIENTE') ELSE
+IF (DOCUMENTO starts with '50') THEN ('BANCO CENTRAL DEL URUGUAY') ELSE
+IF (DOCUMENTO starts with '51') THEN ('B.R.O.U.') ELSE
+IF (DOCUMENTO starts with '52') THEN ('B.H.U.') ELSE
+IF (DOCUMENTO starts with '53') THEN ('B.S.E.') ELSE
+IF (DOCUMENTO starts with '60') THEN ('A.N.C.A.P.') ELSE
+IF (DOCUMENTO starts with '61') THEN ('U.T.E.') ELSE
+IF (DOCUMENTO starts with '62') THEN ('A.F.E.') ELSE
+IF (DOCUMENTO starts with '63') THEN ('P.L.U.N.A.') ELSE
+IF (DOCUMENTO starts with '64') THEN ('A.N.P.') ELSE
+IF (DOCUMENTO starts with '66') THEN ('O.S.E.') ELSE
+IF (DOCUMENTO starts with '67') THEN ('DIRECCION NACIONAL DE CORREOS') ELSE
+IF (DOCUMENTO starts with '68') THEN ('AGENCIA NACIONAL DE VIVIENDA') ELSE
+IF (DOCUMENTO starts with '69') THEN ('URSEA') ELSE
+IF (DOCUMENTO starts with '70') THEN ('INSTITUTO DE COLONIZACION') ELSE
+IF (DOCUMENTO starts with '71') THEN ('URSEC') ELSE
+IF (DOCUMENTO starts with '80') THEN ('INTENDENCIA MPAL. DE ARTIGAS') ELSE
+IF (DOCUMENTO starts with '81') THEN ('INTENDENCIA MPAL. DE CANELONES') ELSE
+IF (DOCUMENTO starts with '82') THEN ('INTENDENCIA MPAL. CERRO LARGO') ELSE
+IF (DOCUMENTO starts with '83') THEN ('INTENDENCIA MPAL. DE COLONIA') ELSE
+IF (DOCUMENTO starts with '84') THEN ('INTENDENCIA MPAL. DE DURAZNO') ELSE
+IF (DOCUMENTO starts with '85') THEN ('INTENDENCIA MPAL. DE FLORES') ELSE
+IF (DOCUMENTO starts with '86') THEN ('INTENDENCIA MPAL. DE FLORIDA') ELSE
+IF (DOCUMENTO starts with '87') THEN ('INTENDENCIA MPAL. DE LAVALLEJA') ELSE
+IF (DOCUMENTO starts with '88') THEN ('INTENDENCIA MPAL. DE MALDONADO') ELSE
+IF (DOCUMENTO starts with '89') THEN ('INTENDENCIA MPAL. DE PAYSANDU') ELSE
+IF (DOCUMENTO starts with '90') THEN ('INTENDENCIA MPAL. DE RIO NEGRO') ELSE
+IF (DOCUMENTO starts with '91') THEN ('INTENDENCIA MPAL. DE RIVERA') ELSE
+IF (DOCUMENTO starts with '92') THEN ('INTENDENCIA MPAL. DE ROCHA') ELSE
+IF (DOCUMENTO starts with '93') THEN ('INTENDENCIA MPAL. DE SALTO') ELSE
+IF (DOCUMENTO starts with '94') THEN ('INTENDENCIA MPAL. DE SAN JOSE') ELSE
+IF (DOCUMENTO starts with '95') THEN ('INTENDENCIA MPAL. DE SORIANO') ELSE
+IF (DOCUMENTO starts with '96') THEN ('INTENDENCIA MPAL. TACUAREMBO') ELSE
+IF (DOCUMENTO starts with '97') THEN ('INTENDENCIA M. TREINTA Y TRES') ELSE
+IF (DOCUMENTO starts with '98') THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF (PARTY_ID = '4363959') THEN ('MINISTERIO DE EDUC. Y CULTURA')
+ELSE ('NADA')
+
+---------------------------------------------------------------------------------------
+
+Agregación Nivel 2 Oficiales (UE):
+
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '211962820014' ) ) THEN ('O.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '210778720012' ) ) THEN ('U.T.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '214172500012' ) ) THEN ('A.N.C.A.P.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '216926360018' ) ) THEN ('A.N.C.A.P.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '210592210014' ) ) THEN ('BANCO CENTRAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '210465050018' ) ) THEN ('BANCO DE SEGUROS DEL ESTADO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '210639630014' ) ) THEN ('BANCO HIPOTECARIO DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '210465260012' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '213961450015' ) ) THEN ('A.N.C.A.P.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '216474980013' ) ) THEN ('OFICINAS DEPENDIENTES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '214107320013' ) ) THEN ('COMISION TEC. MIXTA DE SALTO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '214844360018' ) ) THEN ('DIRECCION GENERAL IMPOSITIVA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '214421830010' ) ) THEN ('A.N.C.A.P.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '213370680019' ) ) THEN ('INSTITUTO DE COLONIZACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '100270620016' ) ) THEN ('JUNTA DPTAL. DE MALDONADO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '040066000016' ) ) THEN ('INTENDENCIA MPAL. DE COLONIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '211763350018' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '180042060014' ) ) THEN ('JUNTA DPTAL. DE SORIANO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '060014790010' ) ) THEN ('INTENDENCIA MPAL. DE FLORES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '090034520010' ) ) THEN ('INTANDENCIA MPAL. DE LAVALLEJA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '020071360012' ) ) THEN ('INTENDENCIA MPAL. DE CANELONES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '030038610010' ) ) THEN ('INTENDENCIA MPAL. CERRO LARGO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '050025320013' ) ) THEN ('INTENDENCIA MPAL. DE DURAZNO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '070030580014' ) ) THEN ('INTENDENCIA MPAL. DE FLORIDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '100055980011' ) ) THEN ('INTENDENCIA MPAL. DE MALDONADO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '130026840012' ) ) THEN ('INTENDENCIA MPAL. DE RIO NEGRO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '160050700014' ) ) THEN ('INTENDENCIA MPAL. DE SALTO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '140029760017' ) ) THEN ('INTENDENCIA MPAL. DE RIVERA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '020147860010' ) ) THEN ('JEFATURA POLICIA DE CANELONES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '030182490019' ) ) THEN ('JUNTA DPTAL. CERRO LARGO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '060051670015' ) ) THEN ('JUNTA DPTAL. DE FLORES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '070113830018' ) ) THEN ('JUNTA DPTAL. DE FLORIDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '090181190015' ) ) THEN ('JUNTA DPTAL. DE LAVALLEJA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '140121700017' ) ) THEN ('JUNTA DPTAL. DE RIVERA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '160240640012' ) ) THEN ('JUNTA DPTAL. DE SALTO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '190193390010' ) ) THEN ('JUNTA DPTAL. PASO DE LOS TOROS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '130076080011' ) ) THEN ('JUNTA DPTAL. DE RIO NEGRO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'BPS') AND (DOCUMENTO = 'SP9202' ) ) THEN ('JUNTA DEP. DE ROCHA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '214988770019' ) ) THEN ('JEFATURA DE POLICIA MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'BPS') AND (DOCUMENTO = 'RESOL.550/16' ) ) THEN ('SECRETARIA DEL MINISTERIO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '216685960012' ) ) THEN ('MIN.INT.DIR.NAC.GUARDIA REP.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '213622970016' ) ) THEN ('OFICINAS DEPENDIENTES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '213934740016' ) ) THEN ('CONSEJO DE EDUCACION PRIMARIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '217334860013' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '214929480018' ) ) THEN ('URSEA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '216978970011' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '214990550012' ) ) THEN ('URSEC') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'BPS') AND (DOCUMENTO = 'RESOL1335/20' ) ) THEN ('MIN. DE DESARROLLO Y BIENESTAR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9401' ) ) THEN ('INTENDENCIA MPAL. DE SAN JOSE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9810' ) ) THEN ('PLANIFICACIÓN (INCISO 98)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9808' ) ) THEN ('DESARROLLO SOCIAL (INCISO 98)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8001' ) ) THEN ('INTENDENCIA MPAL. DE ARTIGAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8701' ) ) THEN ('INTANDENCIA MPAL. DE LAVALLEJA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9805' ) ) THEN ('DEPARTAMENTO DE HOTELES Y CASINOS MUNICIPALES (INCISO 98)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9807' ) ) THEN ('DESARROLLO ECONÓMICO E INTEGRACIÓN REGIONAL (INCISO 98)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9101' ) ) THEN ('INTENDENCIA MPAL. DE RIVERA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8201' ) ) THEN ('INTENDENCIA MPAL. CERRO LARGO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9804' ) ) THEN ('DEPARTAMENTO DE CULTURA (INCISO 98)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9001' ) ) THEN ('INTENDENCIA MPAL. DE RIO NEGRO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8601' ) ) THEN ('INTENDENCIA MPAL. DE FLORIDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9601' ) ) THEN ('INTENDENCIA MPAL. TACUAREMBO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9701' ) ) THEN ('INTENDENCIA M. TREINTA Y TRES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9501' ) ) THEN ('INTENDENCIA MPAL. DE SORIANO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8501' ) ) THEN ('INTENDENCIA MPAL. DE FLORES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9801' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9809' ) ) THEN ('DESCENTRALIZACIÓN (INCISO 98)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8101' ) ) THEN ('INTENDENCIA MPAL. DE CANELONES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8901' ) ) THEN ('INTENDENCIA MPAL. DE PAYSANDU') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9806' ) ) THEN ('DESARROLLO AMBIENTAL (INCISO 98)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9603' ) ) THEN ('MUNICIPIO DE PASO DE LOS TOROS (INCISO 96)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8801' ) ) THEN ('INTENDENCIA MPAL. DE MALDONADO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9811' ) ) THEN ('RECURSOS HUMANOS Y MATERIALES (INCISO 98)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9301' ) ) THEN ('INTENDENCIA MPAL. DE SALTO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8301' ) ) THEN ('INTENDENCIA MPAL. DE COLONIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9201' ) ) THEN ('INTENDENCIA MPAL. DE ROCHA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9803' ) ) THEN ('ACONDICIONAMIENTO URBANO (INCISO 98)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8401' ) ) THEN ('INTENDENCIA MPAL. DE DURAZNO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8302' ) ) THEN ('JUNTA DPTAL. DE COLONIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9602' ) ) THEN ('JUNTA DPTAL. PASO DE LOS TOROS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8502' ) ) THEN ('JUNTA DPTAL. DE FLORES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0420' ) ) THEN ('JEFATURA DE POLICIA SORIANO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0428' ) ) THEN ('DIR. NAL. DE POLICIA TECNICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0430' ) ) THEN ('DIR. NAL. DE SANIDAD POLICIAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0425' ) ) THEN ('DIRECCION NACIONAL DE SALUD') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0427' ) ) THEN ('DIR. NAC. DE INFORM. E INTEL.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0418' ) ) THEN ('JEFATURA DE POLICIA SALTO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0410' ) ) THEN ('JEFATURA DE POLICIA FLORES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0503' ) ) THEN ('AUDITORIA INTERNA DE LA NACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '4004' ) ) THEN ('CONGRESO DE INTENDENTES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2961' ) ) THEN ('CENTRO AUXILIAR VERGARA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0310' ) ) THEN ('SERV. DE INTENDENCIA DEL EJER.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0421' ) ) THEN ('JEFATURA DE POLICIA TACUAREMBO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0429' ) ) THEN ('ESCUELA NAC. DE POLICIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0409' ) ) THEN ('JEFATURA DE POLICIA DURAZNO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0414' ) ) THEN ('JEFATURA DE POLICIA PAYSANDU') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0401' ) ) THEN ('SECRETARIA DEL MINISTERIO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0431' ) ) THEN ('DIR. NAL. DE IDENTIFICACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0407' ) ) THEN ('JEFATURA POLICIA  CERRO LARGO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0419' ) ) THEN ('JEFATURA DE POLICIA SAN JOSE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0411' ) ) THEN ('JEFATURA DE POLICIA FLORIDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0402' ) ) THEN ('DIR. GRAL. DE MIGRACIONES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0408' ) ) THEN ('JEFATURA DE POLICIA DE COLONIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0433' ) ) THEN ('MIN.INT.DIR.NAC.GUARDIA REP.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0406' ) ) THEN ('JEFATURA POLICIA DE CANELONES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0412' ) ) THEN ('JEFATURA DE POLICIA LAVALLEJA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0417' ) ) THEN ('JEFATURA DE POLICIA ROCHA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0413' ) ) THEN ('JEFATURA DE POLICIA MALDONADO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0424' ) ) THEN ('DIR. NACIONAL DE BOMBEROS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0426' ) ) THEN ('DIR. NACIONAL DE CARCELES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0404' ) ) THEN ('JEFATURA DE POLICIA MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0405' ) ) THEN ('JEFATURA DE POLICIA ARTIGAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0423' ) ) THEN ('DIR. NAL. DE POLICIA CAMINERA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0422' ) ) THEN ('JEFATURA POLICIA TREINTAY TRES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0416' ) ) THEN ('JEFATURA DE POLICIA RIVERA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0415' ) ) THEN ('JEFATURA DE POLICIA RIO NEGRO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2932' ) ) THEN ('CENTRO DEP. TREINTA Y TRES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2987' ) ) THEN ('ASISTENCIA INTEGRAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2228' ) ) THEN ('CENTRO DE FORMACIÓN INTERREGIONAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9702' ) ) THEN ('JUNTA DPTAL. DE TREINTA Y TRES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1603' ) ) THEN ('JUZGADOS DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2615' ) ) THEN ('HOSPITAL DE CLINICAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2912' ) ) THEN ('CTRO. HOSPITALARIO DEL NORTE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1304' ) ) THEN ('DIRECCIÓN NACIONALDE COORDINACIÓN DELINTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9102' ) ) THEN ('JUNTA DPTAL. DE RIVERA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '03019' ) ) THEN ('GRUPO DE BUCEO DE LA ARMADA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2940' ) ) THEN ('CENTRO AUXILIAR YOUNG') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2906' ) ) THEN ('HOSPITAL PASTEUR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '3601' ) ) THEN ('AMBIENTE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2916' ) ) THEN ('CENTRO DEP. CANELONES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2406' ) ) THEN ('BANCO DE PREVISIÓN SOCIAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1006' ) ) THEN ('DIR. NACIONAL DE TOPOGRAFIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2979' ) ) THEN ('ASSE RAP ARTIGAS RED ATENCION PRIMARIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0707' ) ) THEN ('COM. HONORARIA PLAN CITRICOLA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1103' ) ) THEN ('DIR. NACIONAL DE CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5128' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2963' ) ) THEN ('HOSP.GER."PIÑEYRO DEL CAMPO"') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5122' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8002' ) ) THEN ('JUNTA DPTAL. DE ARTIGAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1119' ) ) THEN ('FISCALIA DE CORTE Y PROC.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '08004' ) ) THEN ('MIN.IND.Y ENER.DIR.PROP.IND.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6602' ) ) THEN ('O.S.E. MALDONADO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2919' ) ) THEN ('CENTRO DEP. DURAZNO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0504' ) ) THEN ('MIN.ECO TESORERIA GRAL.NACIÓN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0901' ) ) THEN ('SECRETARIA DEL MINISTERIO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1701' ) ) THEN ('TRIBUNAL DE CUENTAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5127' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2623' ) ) THEN ('FACULTAD DE CIENCIAS SOCIALES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2211' ) ) THEN ('COCAP') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0304' ) ) THEN ('COMANDO GENERAL DEL EJERCITO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1303' ) ) THEN ('DIRECCION NAL. DE EMPLEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2952' ) ) THEN ('CENTRO AUXILIAR RIO BRANCO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2984' ) ) THEN ('ASSE RAP SALTO RED ATENCION PRIMARIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2610' ) ) THEN ('FACULTAD DE QUIMICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1118' ) ) THEN ('DIRECCION GRAL. DE REGISTROS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2630' ) ) THEN ('CTRO. UNIV. REGIONAL ESTE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '3501' ) ) THEN ('INISA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2625' ) ) THEN ('FACULTAD DE INFORM. Y COMUNIC') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0811' ) ) THEN ('DIR.TEC.NUCLEAR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0313' ) ) THEN ('MINISTERIO DE DEFENSA NACIONAL COMANDO DE APOYO ADMINISTRATI VO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2409' ) ) THEN ('BANCO DE PREVISIÓN SOCIAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0309' ) ) THEN ('MINISTERIO DE DEFENSA NACIONAL SERVICIO GEOGRÁFICO MILITAR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0704' ) ) THEN ('DIRECCION GENERAL DE SERVS AG') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0325' ) ) THEN ('MINISTERIO DE DEFENSA NACIONAL BRIGADA AÉREA NRO 2') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1124' ) ) THEN ('SERVICIO TELEVISION NACIONAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6801' ) ) THEN ('AGENCIA NACIONAL DE VIVIENDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2626' ) ) THEN ('BIENESTAR ESTUDIANTIL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0705' ) ) THEN ('DIRECCION FORESTAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '4001' ) ) THEN ('INSTITUTO NACIONAL DE SEMILLAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1116' ) ) THEN ('SODRE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2622' ) ) THEN ('INSTITUTO DE ENFERMERIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8602' ) ) THEN ('JUNTA DPTAL. DE FLORIDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2931' ) ) THEN ('CENTRO DEP. TACUAREMBO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2937' ) ) THEN ('CENTRO AUXILIAR CASTILLO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0211' ) ) THEN ('SECRETARIA NAC. DEL DEPORTE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '26008' ) ) THEN ('UNIV.REP.INST. DE HIGIENE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2975' ) ) THEN ('CENTRO AUXILIAR CIUDAD COSTA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2974' ) ) THEN ('CENTRO AUXILAR RINC. BOLSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2955' ) ) THEN ('CENTRO AUX.SAN G. DE POLANCO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6401' ) ) THEN ('ADM. NACIONAL DE PUERTOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0317' ) ) THEN ('MINISTERIO DE DEFENSA NACIONAL ESCUELA DE ARMAS Y SERVICIOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0208' ) ) THEN ('OFICINA NACIONAL DE SERVICIO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2945' ) ) THEN ('CENTRO AUXILIAR LIBERTAD') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2917' ) ) THEN ('CENTRO DEP. CERRO LARGO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1107' ) ) THEN ('ARCHIVO GRAL. DE LA NACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2206' ) ) THEN ('INSTITUTO PLAN AGROPECUARIO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2201' ) ) THEN ('COMISIÓN TÉCNICA MIXTA DEL FRE NTE MARÍTIMO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2918' ) ) THEN ('CENTRO DEP. COLONIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5109' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0501' ) ) THEN ('SECRETARIA DEL MINISTERIO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0706' ) ) THEN ('GRAL DE LA GRANJA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0312' ) ) THEN ('SERVICIO VETERINARIO Y REMONTA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2904' ) ) THEN ('HOSPITAL PEREYRA ROSELL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5108' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY AGENCIA POCITOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2635' ) ) THEN ('CENTRO NACIONAL DE QUEMADOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2408' ) ) THEN ('BANCO DE PREVISIÓN SOCIAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2927' ) ) THEN ('CENTRO DEP. ROCHA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0204' ) ) THEN ('OFICINA DE PLANEAM.Y PRESUP.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5001' ) ) THEN ('BANCO CENTRAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2405' ) ) THEN ('BANCO DE PREVISIÓN SOCIAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0702' ) ) THEN ('I.NA.PE.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2923' ) ) THEN ('CENTRO DEP. MALDONADO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1102' ) ) THEN ('DIRECCION DE EDUCACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0315' ) ) THEN ('MINISTERIO DE DEFENSA NACIONAL ESCUELA MILITAR ARTIGAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0201' ) ) THEN ('OFICINAS DEPENDIENTES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1265' ) ) THEN ('COMISION HONOR. LUCHA HIDATIDO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0338' ) ) THEN ('REG.DE DRAGONES LIBERTADORES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2216' ) ) THEN ('I.NA.C.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0505' ) ) THEN ('DIRECCION GENERAL IMPOSITIVA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2946' ) ) THEN ('CENTRO AUXILIAR MINAS CORRALES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2601' ) ) THEN ('OFICINA CENTRAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2612' ) ) THEN ('FACULTAD DE HUMANIDADES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1401' ) ) THEN ('SECRETARIA GENERAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2902' ) ) THEN ('R.A.P. (AMBULATORIO)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9402' ) ) THEN ('JUNTA DPTAL. DE SAN JOSE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5101' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5104' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1120' ) ) THEN ('PROCURADURIA EST.CONT.ADM') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2925' ) ) THEN ('CENTRO DEP. RIVERA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2609' ) ) THEN ('FACULTAD DE ODONTOLOGIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '3101' ) ) THEN ('U.T.E.C.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2611' ) ) THEN ('FACULTAD DE VETERINARIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2501' ) ) THEN ('ANEP-CONSEJO DIRECTIVO CENTRAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5125' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2624' ) ) THEN ('UNIV.REP.FAC. CIENCIAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2959' ) ) THEN ('CENTRO AUXILIAR SARANDI DEL YI') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2608' ) ) THEN ('INSTITUTO DE HIGIENE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5113' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0306' ) ) THEN ('DIVISION DEL EJERCITO N°2') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2924' ) ) THEN ('CENTRO DEP. PAYSANDU') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5121' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1007' ) ) THEN ('DIR. NACIONAL DE TRANSPORTE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0331' ) ) THEN ('DIRECCION GRAL. DE AVIACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0209' ) ) THEN ('UNIDAD REGULARDORA DE SERVICIO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2980' ) ) THEN ('ASSE RAP CERRO LARGO RED ATENCION PRIMARIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2922' ) ) THEN ('CENTRO DEP. LAVALLEJA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1111' ) ) THEN ('DIRECCION NACIONAL DE IMPRESIO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2956' ) ) THEN ('CENTRO AUXILIAR SAN RAMON') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0301' ) ) THEN ('DIRECCION GENERAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8202' ) ) THEN ('JUNTA DPTAL. CERRO LARGO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2901' ) ) THEN ('ADMINISTRACION SUPERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2915' ) ) THEN ('CENTRO DEP. ARTIGAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2957' ) ) THEN ('CENTRO AUXILIAR SANTA LUCIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2701' ) ) THEN ('SECRETARIA DEL INSTITUTO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0305' ) ) THEN ('DIVISION DEL EJERCITO N°1') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2619' ) ) THEN ('FACULTAD DE PSICOLOGIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1104' ) ) THEN ('MINISTERIO DE EDUCACIÓN Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5124' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1106' ) ) THEN ('MINISTERIO DE EDUCACIÓN Y CULTURA MUSEO NACIONAL DE HISTORIANATURAL Y ANTROPOLOGÍA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6101' ) ) THEN ('U.T.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2964' ) ) THEN ('LAB. FRANSISCO DORREGO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2209' ) ) THEN ('INSTITUTO NACIONAL DE LA LECHE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5107' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0810' ) ) THEN ('CENTRO TEC.Y PROD. INDUSTRIAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2606' ) ) THEN ('FACULTAD DE INGENIERIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2616' ) ) THEN ('IENBA-EUM (ESC.NAL.BELLASARTES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0513' ) ) THEN ('DIRECCION GENERAL DE CASINOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0808' ) ) THEN ('DIR.NAC. ETN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0207' ) ) THEN ('INSTITUTO NACIONAL DE ESTADIS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0318' ) ) THEN ('COMANDO GENERAL DE LA ARMADA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0514' ) ) THEN ('DIRECCION GRAL DE COMERCIO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2505' ) ) THEN ('CONSEJO DE FORMACIÓN EN EDUCA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2913' ) ) THEN ('COLONIAS PSIQUIATRICAS (ESPEC)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5102' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '7001' ) ) THEN ('INSTITUTO DE COLONIZACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2983' ) ) THEN ('ASSE RAP SORIANO RED ATENCION PRIMARIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5112' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY AGENCIA PUNTA DE RIELES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2982' ) ) THEN ('ASSE RAP RIO NEGRO RED ATENCION PRIMARIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0210' ) ) THEN ('PRES.AGESIC') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2407' ) ) THEN ('BANCO DE PREVISIÓN SOCIAL REPARTICIÓN INFORMÁTICA COORDINACIÓN Y CONTROL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6001' ) ) THEN ('A.N.C.A.P.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1004' ) ) THEN ('DIR. NACIONAL DE HIDROGRAFIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2001' ) ) THEN ('DISTR.GAS MDEO-GRUPO PETROBRAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5301' ) ) THEN ('BANCO DE SEGUROS DEL ESTADO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2410' ) ) THEN ('BPS TELEASISTENCIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1005' ) ) THEN ('DIR. NACIONAL DE ARQUITECTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8902' ) ) THEN ('JUNTA DPTAL. DE PAYSANDU') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0335' ) ) THEN ('SERVICIO DE RETIROS Y PENSION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2960' ) ) THEN ('CENTRO AUXILIAR TALA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1201' ) ) THEN ('ADMINISTRACION SUPERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1602' ) ) THEN ('JUZGADO L. CIUDAD DE LA COSTA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1404' ) ) THEN ('MINISTERIO DE VIVIENDA ORDENAM IENTO TERRITORIAL Y MEDIO AMBI ENTE DIRECCIÓN NACIO NAL MEDIO AMBIENTE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0324' ) ) THEN ('FUERZA AEREA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9802' ) ) THEN ('JUNTA DPTAL. DE MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2604' ) ) THEN ('FACULTAD DE CIENCIAS ECONOMICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2207' ) ) THEN ('LABORATORIO TECNOLÓGICO DEL UR UGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2404' ) ) THEN ('BANCO DE PREVISIÓN SOCIAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1121' ) ) THEN ('DIR. GRAL. DE REGISTRO CIVIL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1801' ) ) THEN ('CORTE ELECTORAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1604' ) ) THEN ('PODER JUDICIAL INSTITUTO TÉCNICO FORENSE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0701' ) ) THEN ('DIRECCION GENERAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2981' ) ) THEN ('ASSE RAP FLORES RED ATENCION PRIMARIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2631' ) ) THEN ('CENTRO UNIVER. REGIONAL NORTE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2950' ) ) THEN ('CENTRO AUXILIAR PANDO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5106' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1003' ) ) THEN ('DIRECCION NACIONAL DE VIALIDAD') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0102' ) ) THEN ('CAMARA DE REPRESENTANTES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6701' ) ) THEN ('DIRECCION NACIONAL DE CORREOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1601' ) ) THEN ('SUPREMA CORTE DE JUSTICIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5111' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1204' ) ) THEN ('HOSPITAL PEREYRA ROSELL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0104' ) ) THEN ('PODER LEGISLATIVO COMISIONADO PARLAMENTARIO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '4003' ) ) THEN ('AGENCIA NACIONAL DE INVESTIGAC IÓN E INNOVACIÓN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0508' ) ) THEN ('DIR. DE LOTERIAS Y QUINIELAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2613' ) ) THEN ('SERVICIOS DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2943' ) ) THEN ('CENTRO AUXILIAR JUAN LACAZE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1502' ) ) THEN ('MIN. DE DESARROLLO Y BIENESTAR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9202' ) ) THEN ('JUNTA DEP. DE ROCHA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '3401' ) ) THEN ('JUNTA DE TRANSP.Y ÉTICA PUBLIC') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1112' ) ) THEN ('CJO NAL DE INV.CIENT.YTECNICAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2930' ) ) THEN ('CENTRO DEP. SORIANO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2935' ) ) THEN ('CENTRO AUX.CARDONA Y F. SANCH') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2954' ) ) THEN ('CENTRO AUXILIAR SAN CARLOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2951' ) ) THEN ('CENTRO AUXILIAR P. LOS TOROS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0601' ) ) THEN ('SECRETARIA DEL MINISTERIO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2966' ) ) THEN ('SERV.NAC. DE SANGRE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0708' ) ) THEN ('INSTITUTO NACIONAL DE SEMILLAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6601' ) ) THEN ('O.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0341' ) ) THEN ('MINISTERIO DE DEFENSA NACIONAL DIRECCIÓN NACIONAL DE AVIACIÓ N CIVIL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2978' ) ) THEN ('CTRO.NAC.INF.Y REF.RED DROGA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2503' ) ) THEN ('CONSEJO  EDUCACION SECUNDARIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1115' ) ) THEN ('BIBLIOTECA NACIONAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2401' ) ) THEN ('B.P.S.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2958' ) ) THEN ('CENTRO AUXILIAR SARANDI GRANDE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2607' ) ) THEN ('FACULTAD DE MEDICINA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '7101' ) ) THEN ('URSEC') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1271' ) ) THEN ('INSTITUTO DON.Y TRANSPLANTE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1402' ) ) THEN ('MIN.VIV.DIR.DE VIVIENDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2227' ) ) THEN ('COMISIÓN HONORARIA DE LUCHA CO NTRA EL CÁNCER') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1501' ) ) THEN ('MINISTERIO DE DEPORTE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2953' ) ) THEN ('CENTRO AUXILIAR ROSARIO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9302' ) ) THEN ('JUNTA DPTAL. DE SALTO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2502' ) ) THEN ('CONSEJO DE EDUCACION PRIMARIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0507' ) ) THEN ('DIRECCION NACIONAL DE ADUANAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0333' ) ) THEN ('SERV. DE SANIDAD DE LAS FF.AA.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2944' ) ) THEN ('CENTRO AUXILIAR LASCANO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2605' ) ) THEN ('FACULTAD DE DERECHO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2910' ) ) THEN ('INST.NAC. REUMATOLOGIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0502' ) ) THEN ('CONTADURIA GRAL DE LA NACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2909' ) ) THEN ('INST.NAC. ORTOPEDIA Y TRAUMAT.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5117' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8102' ) ) THEN ('JUNTA DPTAL. DE CANELONES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0101' ) ) THEN ('CAMARA DE SENADORES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5129' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2934' ) ) THEN ('CENTRO AUXILIAR BELLA UNION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0337' ) ) THEN ('SERV. TUTELAS SOCIALES FF.AA.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2230' ) ) THEN ('CENTRO CEIBAL PARA EL APOYO A LA EDUCACIÓN DE LA NI#EZ Y LA ADOLESCENCIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5201' ) ) THEN ('BANCO HIPOTECARIO DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1203' ) ) THEN ('DIVISION FISCALIZACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5116' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0105' ) ) THEN ('INST NAC DD HH Y DEFENSORIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2976' ) ) THEN ('HOSPITAL ESPAÑOL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5120' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8802' ) ) THEN ('JUNTA DPTAL. DE MALDONADO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2914' ) ) THEN ('ASSE SAME') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0336' ) ) THEN ('MINISTERIO DE DEFENSA NACIONAL SERVICIO DE VIVIENDAS DE LAS FUERZAS ARMADAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0321' ) ) THEN ('PREFECTURA NACIONAL NAVAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5114' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY AGENCIA PIEDRAS B LANCAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2908' ) ) THEN ('INST.NAC. DEL CANCER') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0307' ) ) THEN ('MINISTERIO DE DEFENSA NACIONAL DIVISIÓN EJÉRCITO 3') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0311' ) ) THEN ('MINISTERIO DE DEFENSA NACIONAL SERVICIO DE MATERIAL Y ARMAME NTO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0103' ) ) THEN ('COMISION ADM. PAL. LEGISLATIVO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2936' ) ) THEN ('CENTRO AUXILIAR CARMELO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '3301' ) ) THEN ('FISCALIA GENERAL DE LA NACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2933' ) ) THEN ('CENTRO AUXILIAR AIGUA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '08009' ) ) THEN ('MIN.IND.Y ENER.DINAPYME') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6201' ) ) THEN ('A.F.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9502' ) ) THEN ('JUNTA DPTAL. DE SORIANO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2603' ) ) THEN ('FACULTAD DE ARQUITECTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0302' ) ) THEN ('ESTADO MAYOR CONJUNTO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2907' ) ) THEN ('HOSPITAL VILARDEBO (ESPECIALI)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0303' ) ) THEN ('SERV.DE INFORMACION DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0703' ) ) THEN ('PRENADER') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2968' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1302' ) ) THEN ('MINISTERIO DE TRABAJO Y SEGURIDAD SOCIAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2962' ) ) THEN ('CENTRO AUXILIAR LAS PIEDRAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2948' ) ) THEN ('CENTRO AUXILIAR NUEVA PALMIRA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2949' ) ) THEN ('CENTRO AUXILIAR PAN DE AZUCAR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '12103' ) ) THEN ('DIGESA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2986' ) ) THEN ('ASSE  PPL DIR. SIST. AT.PERS.PRIV.DE LIBERTAD') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1001' ) ) THEN ('DESP. SECRETARIA DE ESTADO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2928' ) ) THEN ('CENTRO DEP. SALTO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9002' ) ) THEN ('JUNTA DPTAL. DE RIO NEGRO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2942' ) ) THEN ('CENTRO AUXILIAR J.BATLLE Y O.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0308' ) ) THEN ('DIVISION DEL EJERCITO N°4') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1108' ) ) THEN ('MINISTERIO DE EDUCACIÓN Y CULT URA COMISIÓN DEL PATRIMONIO DE PARTAMENTO DE RESTAU RACIÓN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0801' ) ) THEN ('DIRECCION ADMINISTRACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8402' ) ) THEN ('JUNTA DPTAL. DE DURAZNO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2205' ) ) THEN ('COMISIÓN HONORARIA ANTITUBERCU') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2929' ) ) THEN ('CENTRO DEP. SAN JOSE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1117' ) ) THEN ('FISCALIA DE GOB.- 1°Y 2° TURNO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2921' ) ) THEN ('CENTRO DEP. FLORIDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1901' ) ) THEN ('TRIBUNAL DE LO CONTENCIOSO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0509' ) ) THEN ('DIR. NACIONAL DE CATASTRO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '08007' ) ) THEN ('MIN.IND.Y ENER.DI.NA.MI.GE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5105' ) ) THEN ('BANCO DE LA REPÚBLICA ORIENTAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2203' ) ) THEN ('MINISTERIO DE ECONOMÍA Y FINAN ZAS DIRECCIÓN GENERAL DE CASIN S DEL ESTADO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0323' ) ) THEN ('COMANDO GRAL. FUERZA AEREA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2941' ) ) THEN ('CENTRO AUXILIAR GUICHON') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2905' ) ) THEN ('HOSPITAL MACIEL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2504' ) ) THEN ('CONSEJO DE EDUC.TECNICO PROF.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1101' ) ) THEN ('SECRETARIA DEL MINISTERIO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2226' ) ) THEN ('ORGANISMOS VARIOS  INACAL (INSTITUTO NA CIONAL DE CALIDAD)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2973' ) ) THEN ('ASSE  CENTRO AUX. CHUY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1301' ) ) THEN ('DIRECCION GENERAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2926' ) ) THEN ('CENTRO DEP. RIO NEGRO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2602' ) ) THEN ('FACULTAD DE AGRONOMIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0316' ) ) THEN ('LICEO MILITAR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2947' ) ) THEN ('CENTRO AUXILIAR NUEVA HELVECIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2212' ) ) THEN ('MOVIMIENTO JUVENTUD AGRARIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2920' ) ) THEN ('CENTRO DEP. FLORES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8702' ) ) THEN ('JUNTA DPTAL. DE LAVALLEJA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0332' ) ) THEN ('DIR. GRAL. DE INFRAESTRUCTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2938' ) ) THEN ('CENTRO AUXILIAR CERRO CHATO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '3201' ) ) THEN ('I.N.U.M.E.T(METEOROLOGIA)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0334' ) ) THEN ('DIRC. GRAL. DE LOS SERVICIOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2939' ) ) THEN ('CENTRO AUXILIAR DOLORES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '08001' ) ) THEN ('MIN.IND.Y ENER.DIR.GRAL.SECRET') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1307' ) ) THEN ('INSPECCION NACIONAL DE TRABAJO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0709' ) ) THEN ('DIRECCIÓN GENERAL DE SERVICIOS AGRÍCOLAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2402' ) ) THEN ('BANCO DE PREVISIÓN SOCIAL') ELSE null
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+Agregación Nivel 1 Oficiales (Inciso)
+
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '211962820014' ) ) THEN ('O.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '210778720012' ) ) THEN ('U.T.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '214172500012' ) ) THEN ('A.N.C.A.P.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '216926360018' ) ) THEN ('A.N.C.A.P.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '210592210014' ) ) THEN ('BANCO CENTRAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '210465050018' ) ) THEN ('B.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '210639630014' ) ) THEN ('B.H.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '210465260012' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '213961450015' ) ) THEN ('A.N.C.A.P.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '216474980013' ) ) THEN ('PRESIDENCIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '214107320013' ) ) THEN ('VARIOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '214844360018' ) ) THEN ('MINISTERIO DE ECONOMIA Y FINAN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '214421830010' ) ) THEN ('A.N.C.A.P.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '213370680019' ) ) THEN ('INSTITUTO DE COLONIZACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '100270620016' ) ) THEN ('INTENDENCIA MPAL. DE MALDONADO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '040066000016' ) ) THEN ('INTENDENCIA MPAL. DE COLONIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '211763350018' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '180042060014' ) ) THEN ('INTENDENCIA MPAL. DE SORIANO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '060014790010' ) ) THEN ('INTENDENCIA MPAL. DE FLORES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '090034520010' ) ) THEN ('INTENDENCIA MPAL. DE LAVALLEJA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '020071360012' ) ) THEN ('INTENDENCIA MPAL. DE CANELONES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '030038610010' ) ) THEN ('INTENDENCIA MPAL. CERRO LARGO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '050025320013' ) ) THEN ('INTENDENCIA MPAL. DE DURAZNO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '070030580014' ) ) THEN ('INTENDENCIA MPAL. DE FLORIDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '100055980011' ) ) THEN ('INTENDENCIA MPAL. DE MALDONADO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '130026840012' ) ) THEN ('INTENDENCIA MPAL. DE RIO NEGRO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '160050700014' ) ) THEN ('INTENDENCIA MPAL. DE SALTO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '140029760017' ) ) THEN ('INTENDENCIA MPAL. DE RIVERA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '020147860010' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '030182490019' ) ) THEN ('INTENDENCIA MPAL. CERRO LARGO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '060051670015' ) ) THEN ('INTENDENCIA MPAL. DE FLORES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '070113830018' ) ) THEN ('INTENDENCIA MPAL. DE FLORIDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '090181190015' ) ) THEN ('INTENDENCIA MPAL. DE LAVALLEJA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '140121700017' ) ) THEN ('INTENDENCIA MPAL. DE RIVERA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '160240640012' ) ) THEN ('INTENDENCIA MPAL. DE SALTO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '190193390010' ) ) THEN ('INTENDENCIA MPAL. TACUAREMBO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '130076080011' ) ) THEN ('INTENDENCIA MPAL. DE RIO NEGRO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'BPS') AND (DOCUMENTO = 'SP9202' ) ) THEN ('INTENDENCIA MPAL. DE ROCHA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '214988770019' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'BPS') AND (DOCUMENTO = 'RESOL.550/16' ) ) THEN ('MINISTERIO DE TURISMO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '216685960012' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '213622970016' ) ) THEN ('PRESIDENCIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '213934740016' ) ) THEN ('CONSEJO NACIONAL DE EDUCACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '217334860013' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '214929480018' ) ) THEN ('URSEA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '216978970011' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'RUT') AND (DOCUMENTO = '214990550012' ) ) THEN ('URSEC') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'BPS') AND (DOCUMENTO = 'RESOL1335/20' ) ) THEN ('MINISTERIO DE DEPORTE Y JUVENT') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9401' ) ) THEN ('INTENDENCIA MPAL. DE SAN JOSE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9810' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9808' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8001' ) ) THEN ('INTENDENCIA MPAL. DE ARTIGAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8701' ) ) THEN ('INTENDENCIA MPAL. DE LAVALLEJA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9805' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9807' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9101' ) ) THEN ('INTENDENCIA MPAL. DE RIVERA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8201' ) ) THEN ('INTENDENCIA MPAL. CERRO LARGO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9804' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9001' ) ) THEN ('INTENDENCIA MPAL. DE RIO NEGRO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8601' ) ) THEN ('INTENDENCIA MPAL. DE FLORIDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9601' ) ) THEN ('INTENDENCIA MPAL. TACUAREMBO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9701' ) ) THEN ('INTENDENCIA M. TREINTA Y TRES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9501' ) ) THEN ('INTENDENCIA MPAL. DE SORIANO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8501' ) ) THEN ('INTENDENCIA MPAL. DE FLORES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9801' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9809' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8101' ) ) THEN ('INTENDENCIA MPAL. DE CANELONES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8901' ) ) THEN ('INTENDENCIA MPAL. DE PAYSANDU') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9806' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9603' ) ) THEN ('INTENDENCIA MPAL. TACUAREMBO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8801' ) ) THEN ('INTENDENCIA MPAL. DE MALDONADO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9811' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9301' ) ) THEN ('INTENDENCIA MPAL. DE SALTO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8301' ) ) THEN ('INTENDENCIA MPAL. DE COLONIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9201' ) ) THEN ('INTENDENCIA MPAL. DE ROCHA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9803' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8401' ) ) THEN ('INTENDENCIA MPAL. DE DURAZNO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8302' ) ) THEN ('INTENDENCIA MPAL. DE COLONIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9602' ) ) THEN ('INTENDENCIA MPAL. TACUAREMBO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8502' ) ) THEN ('INTENDENCIA MPAL. DE FLORES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0420' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0428' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0430' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0425' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0427' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0418' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0410' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0503' ) ) THEN ('MINISTERIO DE ECONOMIA Y FINAN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '4004' ) ) THEN ('CONGRESO DE INTENDENTES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2961' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0310' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0421' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0429' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0409' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0414' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0401' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0431' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0407' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0419' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0411' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0402' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0408' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0433' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0406' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0412' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0417' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0413' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0424' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0426' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0404' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0405' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0423' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0422' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0416' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0415' ) ) THEN ('MINISTERIO DEL INTERIOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2932' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2987' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2228' ) ) THEN ('VARIOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9702' ) ) THEN ('INTENDENCIA M. TREINTA Y TRES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1603' ) ) THEN ('PODER JUDICIAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2615' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2912' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1304' ) ) THEN ('MINISTERIO DE TRABAJO Y SEGUR.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9102' ) ) THEN ('INTENDENCIA MPAL. DE RIVERA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '03019' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2940' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2906' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '3601' ) ) THEN ('AMBIENTE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2916' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2406' ) ) THEN ('B.P.S.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1006' ) ) THEN ('MINISTERIO DE TRANSP. Y OBRAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2979' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0707' ) ) THEN ('MINISTERIO DE GANADERIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1103' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5128' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2963' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5122' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8002' ) ) THEN ('INTENDENCIA MPAL. DE ARTIGAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1119' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '08004' ) ) THEN ('MINISTERIO DE IND.Y ENERGIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6602' ) ) THEN ('O.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2919' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0504' ) ) THEN ('MINISTERIO DE ECONOMIA Y FINAN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0901' ) ) THEN ('MINISTERIO DE TURISMO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1701' ) ) THEN ('TRIBUNAL DE CUENTAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5127' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2623' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2211' ) ) THEN ('VARIOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0304' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1303' ) ) THEN ('MINISTERIO DE TRABAJO Y SEGUR.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2952' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2984' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2610' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1118' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2630' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '3501' ) ) THEN ('INISA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2625' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0811' ) ) THEN ('MINISTERIO DE IND.Y ENERGIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0313' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2409' ) ) THEN ('B.P.S.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0309' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0704' ) ) THEN ('MINISTERIO DE GANADERIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0325' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1124' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6801' ) ) THEN ('AGENCIA NACIONAL DE VIVIENDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2626' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0705' ) ) THEN ('MINISTERIO DE GANADERIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '4001' ) ) THEN ('INSTITUTO NACIONAL DE SEMILLAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1116' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2622' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8602' ) ) THEN ('INTENDENCIA MPAL. DE FLORIDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2931' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2937' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0211' ) ) THEN ('PRESIDENCIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '26008' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2975' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2974' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2955' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6401' ) ) THEN ('A.N.P.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0317' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0208' ) ) THEN ('PRESIDENCIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2945' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2917' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1107' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2206' ) ) THEN ('VARIOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2201' ) ) THEN ('VARIOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2918' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5109' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0501' ) ) THEN ('MINISTERIO DE ECONOMIA Y FINAN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0706' ) ) THEN ('MINISTERIO DE GANADERIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0312' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2904' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5108' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2635' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2408' ) ) THEN ('B.P.S.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2927' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0204' ) ) THEN ('PRESIDENCIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5001' ) ) THEN ('BANCO CENTRAL DEL URUGUAY') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2405' ) ) THEN ('B.P.S.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0702' ) ) THEN ('MINISTERIO DE GANADERIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2923' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1102' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0315' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0201' ) ) THEN ('PRESIDENCIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1265' ) ) THEN ('MINISTERIO DE SALUD PUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0338' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2216' ) ) THEN ('VARIOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0505' ) ) THEN ('MINISTERIO DE ECONOMIA Y FINAN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2946' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2601' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2612' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1401' ) ) THEN ('MINISTERIO DE VIVIENDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2902' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9402' ) ) THEN ('INTENDENCIA MPAL. DE SAN JOSE') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5101' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5104' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1120' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2925' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2609' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '3101' ) ) THEN ('U.T.E.C.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2611' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2501' ) ) THEN ('CONSEJO NACIONAL DE EDUCACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5125' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2624' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2959' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2608' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5113' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0306' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2924' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5121' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1007' ) ) THEN ('MINISTERIO DE TRANSP. Y OBRAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0331' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0209' ) ) THEN ('PRESIDENCIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2980' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2922' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1111' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2956' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0301' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8202' ) ) THEN ('INTENDENCIA MPAL. CERRO LARGO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2901' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2915' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2957' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2701' ) ) THEN ('INSTITUTO DEL MENOR') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0305' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2619' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1104' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5124' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1106' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6101' ) ) THEN ('U.T.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2964' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2209' ) ) THEN ('VARIOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5107' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0810' ) ) THEN ('MINISTERIO DE IND.Y ENERGIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2606' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2616' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0513' ) ) THEN ('MINISTERIO DE ECONOMIA Y FINAN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0808' ) ) THEN ('MINISTERIO DE IND.Y ENERGIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0207' ) ) THEN ('PRESIDENCIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0318' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0514' ) ) THEN ('MINISTERIO DE ECONOMIA Y FINAN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2505' ) ) THEN ('CONSEJO NACIONAL DE EDUCACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2913' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5102' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '7001' ) ) THEN ('INSTITUTO DE COLONIZACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2983' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5112' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2982' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0210' ) ) THEN ('PRESIDENCIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2407' ) ) THEN ('B.P.S.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6001' ) ) THEN ('A.N.C.A.P.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1004' ) ) THEN ('MINISTERIO DE TRANSP. Y OBRAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2001' ) ) THEN ('DISTR.GAS MDEO-GRUPO PETROBRAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5301' ) ) THEN ('B.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2410' ) ) THEN ('B.P.S.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1005' ) ) THEN ('MINISTERIO DE TRANSP. Y OBRAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8902' ) ) THEN ('INTENDENCIA MPAL. DE PAYSANDU') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0335' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2960' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1201' ) ) THEN ('MINISTERIO DE SALUD PUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1602' ) ) THEN ('PODER JUDICIAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1404' ) ) THEN ('MINISTERIO DE VIVIENDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0324' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9802' ) ) THEN ('INTENDENCIA MPAL. MONTEVIDEO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2604' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2207' ) ) THEN ('VARIOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2404' ) ) THEN ('B.P.S.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1121' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1801' ) ) THEN ('CORTE ELECTORAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1604' ) ) THEN ('PODER JUDICIAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0701' ) ) THEN ('MINISTERIO DE GANADERIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2981' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2631' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2950' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5106' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1003' ) ) THEN ('MINISTERIO DE TRANSP. Y OBRAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0102' ) ) THEN ('PODER LEGISLATIVO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6701' ) ) THEN ('DIRECCION NACIONAL DE CORREOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1601' ) ) THEN ('PODER JUDICIAL') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5111' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1204' ) ) THEN ('MINISTERIO DE SALUD PUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0104' ) ) THEN ('PODER LEGISLATIVO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '4003' ) ) THEN ('AGENCIA NACIONAL DE INVESTIGACIÓN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0508' ) ) THEN ('MINISTERIO DE ECONOMIA Y FINAN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2613' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2943' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1502' ) ) THEN ('MINISTERIO DE DEPORTE Y JUVENT') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9202' ) ) THEN ('INTENDENCIA MPAL. DE ROCHA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '3401' ) ) THEN ('JUTEP') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1112' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2930' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2935' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2954' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2951' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0601' ) ) THEN ('MINISTERIO DE RELACIONES EXT.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2966' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0708' ) ) THEN ('MINISTERIO DE GANADERIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6601' ) ) THEN ('O.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0341' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2978' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2503' ) ) THEN ('CONSEJO NACIONAL DE EDUCACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1115' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2401' ) ) THEN ('B.P.S.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2958' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2607' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '7101' ) ) THEN ('URSEC') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1271' ) ) THEN ('MINISTERIO DE SALUD PUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1402' ) ) THEN ('MINISTERIO DE VIVIENDA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2227' ) ) THEN ('VARIOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1501' ) ) THEN ('MINISTERIO DE DEPORTE Y JUVENT') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2953' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9302' ) ) THEN ('INTENDENCIA MPAL. DE SALTO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2502' ) ) THEN ('CONSEJO NACIONAL DE EDUCACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0507' ) ) THEN ('MINISTERIO DE ECONOMIA Y FINAN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0333' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2944' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2605' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2910' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0502' ) ) THEN ('MINISTERIO DE ECONOMIA Y FINAN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2909' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5117' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8102' ) ) THEN ('INTENDENCIA MPAL. DE CANELONES') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0101' ) ) THEN ('PODER LEGISLATIVO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5129' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2934' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0337' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2230' ) ) THEN ('VARIOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5201' ) ) THEN ('B.H.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1203' ) ) THEN ('MINISTERIO DE SALUD PUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5116' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0105' ) ) THEN ('PODER LEGISLATIVO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2976' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5120' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8802' ) ) THEN ('INTENDENCIA MPAL. DE MALDONADO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2914' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0336' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0321' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5114' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2908' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0307' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0311' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0103' ) ) THEN ('PODER LEGISLATIVO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2936' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '3301' ) ) THEN ('FISCALIA GENERAL DE LA NACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2933' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '08009' ) ) THEN ('MINISTERIO DE IND.Y ENERGIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '6201' ) ) THEN ('A.F.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9502' ) ) THEN ('INTENDENCIA MPAL. DE SORIANO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2603' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0302' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2907' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0303' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0703' ) ) THEN ('MINISTERIO DE GANADERIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2968' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1302' ) ) THEN ('MINISTERIO DE TRABAJO Y SEGUR.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2962' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2948' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2949' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '12103' ) ) THEN ('MINISTERIO DE SALUD PUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2986' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1001' ) ) THEN ('MINISTERIO DE TRANSP. Y OBRAS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2928' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '9002' ) ) THEN ('INTENDENCIA MPAL. DE RIO NEGRO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2942' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0308' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1108' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0801' ) ) THEN ('MINISTERIO DE IND.Y ENERGIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8402' ) ) THEN ('INTENDENCIA MPAL. DE DURAZNO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2205' ) ) THEN ('VARIOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2929' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1117' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2921' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1901' ) ) THEN ('TRIBUNAL DE LO CONTENCIOSO') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0509' ) ) THEN ('MINISTERIO DE ECONOMIA Y FINAN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '08007' ) ) THEN ('MINISTERIO DE IND.Y ENERGIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '5105' ) ) THEN ('B.R.O.U.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2203' ) ) THEN ('MINISTERIO DE ECONOMIA Y FINAN') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0323' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2941' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2905' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2504' ) ) THEN ('CONSEJO NACIONAL DE EDUCACION') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1101' ) ) THEN ('MINISTERIO DE EDUC. Y CULTURA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2226' ) ) THEN ('VARIOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2973' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1301' ) ) THEN ('MINISTERIO DE TRABAJO Y SEGUR.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2926' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2602' ) ) THEN ('UNIVERSIDAD DE LA REPUBLICA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0316' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2947' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2212' ) ) THEN ('VARIOS') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2920' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '8702' ) ) THEN ('INTENDENCIA MPAL. DE LAVALLEJA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0332' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2938' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '3201' ) ) THEN ('I.N.U.M.E.T(METEOROLOGIA)') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0334' ) ) THEN ('MINISTERIO DE DEFENSA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2939' ) ) THEN ('A.S.S.E.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '08001' ) ) THEN ('MINISTERIO DE IND.Y ENERGIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '1307' ) ) THEN ('MINISTERIO DE TRABAJO Y SEGUR.') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '0709' ) ) THEN ('MINISTERIO DE GANADERIA') ELSE
+IF ( ( COD_TIPO_DOCUMENTO = 'PUB') AND (DOCUMENTO = '2402' ) ) THEN ('B.P.S.') ELSE null
