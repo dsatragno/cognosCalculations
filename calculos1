@@ -1,17 +1,75 @@
 Cálculos de Cognos:
-------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------
+Paquete Vigente:
+case when FECHA_VENCE_PAQUETE is not null then 
+    case when (FECHA_VENCE_PAQUETE < TO_DATE(
+             CONCAT(
+                 CONCAT(
+                     CONCAT(SUBSTR(FECHA_PRODUCCION,1,4), '-'),
+                     CONCAT(SUBSTR(FECHA_PRODUCCION,5,2), '-')), 
+                     _day(LAST_DAY(TO_DATE(FECHA_PRODUCCION, 'yyyymm')))), 'yyyy-mm-dd')) then ('Vencido') else ('Vigente') end
+            else null end
+
+-------------------------------------------------------------------------------------------------------------------------------------
+Porcentaje Paquetes Vigentes: (despues de agregación)
+
+count (case when (FECHA_VENCE_PAQUETE > TO_DATE(
+                 CONCAT(
+                     CONCAT(
+                         CONCAT(SUBSTR(FECHA_PRODUCCION,1,4), '-'),
+                         CONCAT(SUBSTR(FECHA_PRODUCCION,5,2), '-')), 
+                         _day(LAST_DAY(TO_DATE(FECHA_PRODUCCION, 'yyyymm')))), 'yyyy-mm-dd')) then 1 end)
+    /
+
+(count (case when (FECHA_VENCE_PAQUETE > TO_DATE(
+                 CONCAT(
+                     CONCAT(
+                         CONCAT(SUBSTR(FECHA_PRODUCCION,1,4), '-'),
+                         CONCAT(SUBSTR(FECHA_PRODUCCION,5,2), '-')), 
+                         _day(LAST_DAY(TO_DATE(FECHA_PRODUCCION, 'yyyymm')))), 'yyyy-mm-dd')) then 1 end)
+        +
+        
+count (case when (FECHA_VENCE_PAQUETE <= TO_DATE(
+                 CONCAT(
+                     CONCAT(
+                         CONCAT(SUBSTR(FECHA_PRODUCCION,1,4), '-'),
+                         CONCAT(SUBSTR(FECHA_PRODUCCION,5,2), '-')), 
+                         _day(LAST_DAY(TO_DATE(FECHA_PRODUCCION, 'yyyymm')))), 'yyyy-mm-dd')) then 1 end)  )
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+Paquete Meses Restantes:
+
+((_year(FECHA_VENCE_PAQUETE)
+-
+_year(TO_DATE(
+       CONCAT(
+             CONCAT(
+                   CONCAT(SUBSTR(FECHA_PRODUCCION,1,4), '-'),
+                   CONCAT(SUBSTR(FECHA_PRODUCCION,5,2), '-')), 
+                   _day(LAST_DAY(TO_DATE(FECHA_PRODUCCION, 'yyyymm')))), 'yyyy-mm-dd'))) * 12) 
++
+(_month(FECHA_VENCE_PAQUETE)
+-
+_month(TO_DATE(
+       CONCAT(
+             CONCAT(
+                   CONCAT(SUBSTR(FECHA_PRODUCCION,1,4), '-'),
+                   CONCAT(SUBSTR(FECHA_PRODUCCION,5,2), '-')), 
+                   _day(LAST_DAY(TO_DATE(FECHA_PRODUCCION, 'yyyymm')))), 'yyyy-mm-dd')) )
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
 Acumulado Fact Total Mes (2023 - Activos)=
 running-total (Fact Total Mes (2023 - Activos))
 
 Fact Total Mes (2023 - Activos)=
 total (case when ( ACTIVO_MDM = 'Activo' and FECHA_PRODUCCION starts with '2023' ) THEN Total_Fact_Mes ELSE 0 END)
------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Part. de Clientes Emp. en Total Ingresos ANTEL=
 (Fact_Total_Mes_2023_Activos / Fact_Total_de_Antel_dato_de_AEE)
 
-------------------------------------------------------------
-
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 (dic22) Cant. Clientes ZAFIRO=
 COUNT ( DISTINCT (CASE WHEN ( FECHA_PRODUCCION = '202212' AND Subsegmento = 'ZAFIRO' and ACTIVO_MDM = 'Activo') THEN PARTY_ID ELSE NULL END) for report )
